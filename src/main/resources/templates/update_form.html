@@ -1,0 +1,30 @@
+<html th:replace="base::layout(~{::section})">
+	<head>
+		
+	</head>
+	<body>
+		<section style="height: 350px; display: flex; justify-content: center; text-align: center;">
+			<form th:action="@{/Admin/update_save}" method="post" th:object="${values}">
+				<table>
+					<tr>
+						<td>BookID:</td>&nbsp;&nbsp;
+						<td> <input type="text" name="id" th:field="*{id}"/></td>
+					</tr>
+					<tr>
+						<td>Book Name</td>
+						<td> <input type="text" name="name" th:field="*{name}"/> </td>
+					</tr>
+					<tr>
+						<td>Faculty</td>
+						<td>
+							<input type="text" name="faculty" th:field="*{faculty}"/>
+						</td>
+					</tr>
+					<tr>
+						<td> <input type="submit" value="update"/> </td>
+					</tr>
+				</table>
+			</form>
+		</section>
+	</body>
+</html>

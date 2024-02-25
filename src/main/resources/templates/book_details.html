@@ -1,0 +1,37 @@
+<html th:replace="base::layout(~{::section})">
+	<head>
+		<style>
+			td{
+				border-radius: 1px solid black;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<section style="display: flex; justify-content: center; align-items: center;
+		height: 350px;">
+			<table border="1">
+				<tr style="border: 1px solid black;">
+					<td style="border:1px solid black;">Book ID
+					</td>
+					<td>Book Name</td>
+					<td>Faculty</td>
+					<td>Status</td>
+					
+					<td>Update</td>
+					<td>Delete</td>
+				</tr>
+				<tr  th:each="l:${alist}">
+					<td th:text="${l.id}"></td>
+					<td th:text="${l.name}"></td>
+					<td th:text="${l.faculty}"></td>
+					<td th:text="${l.status}"></td>
+					<td> <a th:href="@{/update(id=${l.id})}">update</a></td>
+					<td> <a th:href="@{/delete(id=${l.id})}">delete</a> </td>
+				</tr>
+				
+				
+			</table>
+		</section>
+	</body>
+</html>

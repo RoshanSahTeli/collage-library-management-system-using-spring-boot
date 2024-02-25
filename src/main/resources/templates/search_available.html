@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" th:replace="base::layout(~{::section})">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<section style="height: 350px;display: flex; justify-content: center; align-items: center; ">
+		
+	<table border="1" th:if="${bsearch.isPresent()}">
+		<tr>
+			<td>Book ID</td>
+			<td th:text="${bsearch.get().id}"></td>
+		</tr>
+		<tr>
+			<td>Book Name:</td>
+			<td th:text="${bsearch.get().name}"></td>
+		</tr>
+		<tr>
+			<td>Added Date:</td>
+			<td th:text="${bsearch.get().date}"></td>
+		</tr>
+		<tr>
+			<td>Faculty</td>
+			<td th:text="${bsearch.get().faculty}"></td>
+		</tr>
+		<tr>
+			<td>Status</td>
+			<td th:text="${bsearch.get().status}"></td>
+		</tr>
+	</table>
+	</section>
+</body>
+</html>

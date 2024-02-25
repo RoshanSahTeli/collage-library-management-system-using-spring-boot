@@ -1,0 +1,16 @@
+
+<html lang="en" th:replace="base::layout(~{::section})">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<section style="height: 350px; text-align: center; padding: 15px 0px 10px 0px;">
+		<h2>Available book count: <span th:text="${count}"></span></h2>
+		<a th:href="@{/Admin/available_details}" style="text-decoration: none;">View Details</a>
+		<h2><br><br>Issued Book count: <span th:text="${count_issued}"></span></h2><br>
+		<a th:href="@{/Admin/issued_details}" style="text-decoration: none;">View Details</a>
+	</section>
+	
+</body>
+</html>

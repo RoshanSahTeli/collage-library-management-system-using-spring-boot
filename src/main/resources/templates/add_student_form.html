@@ -1,0 +1,41 @@
+<html th:replace="base::layout(~{::section})">
+	<head>
+		
+	</head>
+	<body>
+		
+		<section style="display:flex ;justify-content: center;align-items: center;
+		height: 370px;">
+		
+		<form th:action="@{/Admin/add_student}" method="post">
+			<table border="1">
+				
+				<tr>
+					<td>Student ID</td>
+					<td> <input type="number" name="sid"/> </td>
+				</tr>
+				<tr>
+					<td>Student Name</td>
+					<td> <input type="text" name="sname"/> </td>
+				</tr>
+				
+				<tr>
+					<td>Faculty</td>
+					<td> <input type="text" name="faculty"/> </td>
+				</tr>
+				
+				<tr>
+					<td>Semester</td>
+					<td> <input type="number" name="semester"/> </td>
+				</tr>
+				
+				<tr>
+					<td>  <input type="submit" value="add"/> </td>
+				</tr>
+			</table>
+		</form>
+			
+		</section>
+		
+	</body>
+</html>
