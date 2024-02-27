@@ -5,14 +5,16 @@
 	<title>Document</title>
 	<link rel="stylesheet" th:href="@{/css/home.css}">
 	
-	<style>
-		
-	</style>
-	
 </head>
 <body>
+	
+	<style>
+		.container{
+			color: red;
+		}
+	</style>
 	<section>
-		<div class="container" style="height: 350px;">
+		<div class="container text-white" style="height: 350px;">
 			<a th:href="@{/Admin/csit}">CSIT</a>
 			<form th:action="@{/logout}" method="post">
 				<button type="submit">Logout</button>

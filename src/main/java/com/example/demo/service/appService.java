@@ -1,27 +1,29 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.entity.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Repository.appRepository;
 import com.example.demo.Repository.bookRepository;
 import com.example.demo.Repository.issueRepo;
 import com.example.demo.Repository.studentRepository;
-import com.example.demo.entity.Admins;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 
 import jakarta.transaction.Transactional;
 
-import java.time.LocalDate;
-
 @Component
 public class appService {
+	@Autowired 
+	private JavaMailSender javaMailSender;
+	
 	@Autowired
 	private appRepository repo;
 	
@@ -91,15 +93,15 @@ public class appService {
 		brepo.setStatus(id,status);
 	}
 	
-	public void save_student(int sid,String sname,int semester,String faculty) {
-		student s=new student();
-		s.setSid(sid);
-		s.setName(sname);
-		s.setSemester(semester);
-		s.setFaculty(faculty);
-		
-		srepo.save(s);
-	}
+//	public void save_student(int sid,String sname,int semester,String faculty) {
+//		student s=new student();
+//		s.setSid(sid);
+//		s.setName(sname);
+//		s.setSemester(semester);
+//		s.setFaculty(faculty);
+//		
+//		srepo.save(s);
+//	}
 	
 	public long countBook(String name,String status) {
 		
@@ -146,5 +148,32 @@ public class appService {
 	public Books find(String bid) {
 		Books b=brepo.findById(bid).get();
 		return b;
+	}
+	public List<student> request(String status){
+		List<student>list=srepo.findByStatus(status);
+		return list;
+	}
+	
+	@Transactional
+	public void verify(String status,int id) {
+		srepo.updateVerification(status, id);
+	}
+	
+	public student findStudent(int id) {
+		student s=srepo.findById(id).get();
+		return s;
+	}
+	
+	public void mail(String to,String body,String subject) {
+		SimpleMailMessage message=new SimpleMailMessage();
+		message.setFrom("Roshanshah920@gmail.com");
+		message.setTo(to);
+		message.setText(body);
+		message.setSubject(subject);
+		javaMailSender.send(message);
+
+	}
+	public void reject(int id) {
+		srepo.deleteById(id);
 	}
 }

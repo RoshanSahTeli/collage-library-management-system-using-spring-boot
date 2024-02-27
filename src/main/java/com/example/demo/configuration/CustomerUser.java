@@ -8,18 +8,20 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.demo.entity.Admins;
+import com.example.demo.entity.student;
 
 public class CustomerUser implements UserDetails {
 
-		public CustomerUser(Admins a) {
-		super();
-		this.a = a;
-	}
+		student s;
+		
+	public CustomerUser(student s) {
+			super();
+			this.s = s;
+		}
 
-		Admins a;
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		SimpleGrantedAuthority authority=new SimpleGrantedAuthority(a.getRole());
+		SimpleGrantedAuthority authority=new SimpleGrantedAuthority(s.getRole());
 		// TODO Auto-generated method stub
 		return Arrays.asList(authority);
 	}
@@ -27,13 +29,13 @@ public class CustomerUser implements UserDetails {
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return a.getPassword();
+		return s.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return a.getEmail();
+		return s.getEmail();
 	}
 
 	@Override

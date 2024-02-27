@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +20,11 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/Admin")
 public class appController {
+	
 	@Autowired
 	private appService service;
 	
-//	
-//	@GetMapping("/login_form")
-//	public String login() {
-//		return "login_form";
-//	}
+
 
 	@GetMapping("/add_book_form")
 	public String add_book() {
@@ -83,12 +79,19 @@ public class appController {
 		return "add_student_form";
 	}
 	
-	@PostMapping("/add_student")
-	public String save_studnet(  @RequestParam("sid")int sid, @RequestParam("sname")String name, @RequestParam("semester") int semester,
-			 @RequestParam("faculty") String faculty) {
-		
-		service.save_student(sid,name, semester, faculty);
-		return "add_student_Success";
+//	@PostMapping("/add_student")
+//	public String save_studnet(  @RequestParam("sid")int sid, @RequestParam("sname")String name, @RequestParam("semester") int semester,
+//			 @RequestParam("faculty") String faculty) {
+//		
+//		service.save_student(sid,name, semester, faculty);
+//		return "add_student_Success";
+//	}
+	
+	@GetMapping("/show_requests")
+	public String requests(Model model) {
+		 List<student> list=  service.request("Unverified");
+		 model.addAttribute("list",list);
+		return "request";
 	}
 	
 	@GetMapping ("/csit")
@@ -183,6 +186,26 @@ public class appController {
 		}
 		return "login_success";
 	}
+	@GetMapping("/verify")
+	public String verify( @RequestParam("id")int sid) {
+		service.verify("Verfied", sid);
+		student s=service.findStudent(sid);
+		
+		service.mail(s.getEmail(),"You are verified user of Library","verficication");
+	
+		return "login_success";
+		
+	}
+	
+	@GetMapping("/reject")
+	public String reject(@RequestParam("id")int sid) {
+		student s=service.findStudent(sid);
+		service.mail(s.getEmail(), "Account creation failed", "rejected");
+		service.reject(sid);
+	
+		return "login_success";
+	}
+	
 
 	
 

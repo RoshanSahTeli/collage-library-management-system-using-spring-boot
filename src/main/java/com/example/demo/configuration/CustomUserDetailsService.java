@@ -7,22 +7,24 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Repository.appRepository;
+import com.example.demo.Repository.studentRepository;
 import com.example.demo.entity.Admins;
+import com.example.demo.entity.student;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService{
 	@Autowired
-	private appRepository repo;
+	private studentRepository srepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
-		Admins a=repo.findByEmail(username);
-		if(a==null) {
+		 student s=srepo.findByEmail(username);
+		if(s==null) {
 			throw new UsernameNotFoundException("Username Not Found!!");
 		}
 		else {
-			return new CustomerUser(a);
+			return new CustomerUser(s);
 		}
 	}
 
