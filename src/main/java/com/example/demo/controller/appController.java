@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.entity.Books;
 import com.example.demo.entity.student;
 import com.example.demo.service.appService;
+import com.example.demo.service.homeService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -24,7 +26,8 @@ public class appController {
 	@Autowired
 	private appService service;
 	
-
+@Autowired
+private homeService hservice;
 
 	@GetMapping("/add_book_form")
 	public String add_book() {
@@ -33,16 +36,24 @@ public class appController {
 	
 	@PostMapping("/add_book")
 	public String add_book(@RequestParam("book_id") String id,@RequestParam("book_name")
-	String name,@RequestParam("book_faculty")String faculty) {
+	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("book_faculty")String faculty) {
 		
-		service.add_book(id, name, faculty);
+		service.add_book(id, name,author,publication, faculty);
 		return "add_success";
 	}
 	
 	@GetMapping("/home")
-	public String home() {
+	public String home( Principal principal) {
+		student s=hservice.userStatus(principal.getName());
+		String status=s.getStatus();
+		if(status.equals("Verfied")) {
+			return "login_success";
+		}
+		else {
+			return "unverified";
+		}
 		
-		return "login_success";
+		
 	}
 	
 	@GetMapping("/issue_form")
@@ -122,22 +133,20 @@ public class appController {
 		 model.addAttribute("count_issued", count_issued);
 		return "details";
 	}
-	@GetMapping("/search")
-	public String search(@RequestParam("search")String id,Model model) {
-		
-		Optional<com.example.demo.entity.issue> ilist=service.searchIssuedBook(id);
-		
-		if(ilist.isEmpty()) {
-			Optional<Books>blist=service.searchAvailableBook(id);
-			//System.out.println(blist);
-			model.addAttribute("bsearch", blist);
-			return "search_available";
-		}
-		else {
-			model.addAttribute("search", ilist);
-			return "search_issued";
-		}
 	
+	@GetMapping("/search")
+	public String search(@RequestParam("search")String id,@RequestParam("search")String name,   Model model) {
+		
+		List<com.example.demo.entity.issue> ilist=service.searchIssuedBook(id,name);
+		List<Books>blist=service.searchAvailableBook(id,name,"Available");
+		model.addAttribute("ilist", ilist);
+		model.addAttribute("alist", blist);
+		
+		return "search_issued";
+			
+		
+		
+
 	}
 	@GetMapping("/available_details")
 	public String availableBooks(Model model,HttpSession session){
@@ -164,10 +173,11 @@ public class appController {
 	}
 	
 	@PostMapping("/update_save")
-	public String update_save(@RequestParam("id")String bid,@RequestParam("name")String bname,
-			@RequestParam("faculty")String faculty) {
-			System.out.println(bid);
-		service.update_save(bid, bname, faculty);
+	public String update_save(@RequestParam("bid")String bid,@RequestParam("bname")String bname,
+			@RequestParam("faculty")String faculty,@RequestParam("author")String author,
+			@RequestParam("publication")String publication) {
+			
+		service.update_save(bid, bname, faculty,author,publication);
 		return "updated";
 	}
 	
@@ -191,7 +201,7 @@ public class appController {
 		service.verify("Verfied", sid);
 		student s=service.findStudent(sid);
 		
-		service.mail(s.getEmail(),"You are verified user of Library","verficication");
+		//service.mail(s.getEmail(),"You are verified user of Library","verficication");
 	
 		return "login_success";
 		
@@ -200,7 +210,7 @@ public class appController {
 	@GetMapping("/reject")
 	public String reject(@RequestParam("id")int sid) {
 		student s=service.findStudent(sid);
-		service.mail(s.getEmail(), "Account creation failed", "rejected");
+		//service.mail(s.getEmail(), "Account creation failed", "rejected");
 		service.reject(sid);
 	
 		return "login_success";

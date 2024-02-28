@@ -20,5 +20,10 @@ public interface studentRepository extends JpaRepository<student, Integer> {
 	@Modifying
 	@Query("update student s set s.status= :sta where s.sid= :sid")
 	public void updateVerification(@Param("sta")String status,@Param("sid")int id);
+	
+//	@Query("select s from student s where s.status= :status and s.sid= :sid")
+//	public void findStatusAnd 
+	
+	
 
 }

@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class demo {
 	public static void main(String[] args) {
-		System.out.println(new BCryptPasswordEncoder().encode("spring"));
+		System.out.println(new BCryptPasswordEncoder().encode("java"));
 	}
 
 }

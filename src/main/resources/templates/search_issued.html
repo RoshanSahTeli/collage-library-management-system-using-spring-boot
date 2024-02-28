@@ -5,34 +5,50 @@
 	<body>
 		<section style="display: flex; justify-content: center; align-items: center;
 		height: 350px; padding-top: 10px;">
-			<table th:if="${search.isPresent()}" border="1">
+		
+		<table border="1">
+			<th colspan="7" style="text-align: center;">Available Books</th>
+			<tr>
+				<td>Book ID:</td>
+				<td>Book Name:</td>
+				<td>Author:</td>
+				<td>Publication:</td>
+				<td>Faculty:</td>
+				<td>Added Date:</td>
+				<td>Status:</td>
+			</tr>
+			<tr th:each="a:${alist}">
+				<td th:text="${a.bid}"></td>
+				<td th:text="${a.bname}"></td>
+				<td th:text="${a.author}"></td>
+				<td th:text="${a.publication}"></td>
+				<td th:text="${a.faculty}"></td>
+				<td th:text="${a.add_date}"></td>
+				<td th:text="${a.status}"></td>
+			</tr>
+		</table>&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			<table border="1">
+				<th colspan="7" style="text-align: center;">Issued Books</th>
 				<tr>
-					<td>Book ID: </td>
-					<td th:text="${search.get().bid}"></td>
-				</tr>
-				<tr>
-					<td>Book Name: </td>
-					<td th:text="${search.get().bname}"></td>
-				</tr>
-				<tr>
-					<td>Student ID:</td>
-					<td th:text="${search.get().sid}"></td>
-				</tr>
-				<tr>
-					<td>Student Name:</td>
-					<td th:text="${search.get().sname}"></td>
-				</tr>
-				<tr>
-					<td>Faculty:</td>
-					<td th:text="${search.get().faculty}"></td>
-				</tr>
-				<tr>
+					<td>Book ID</td>
+					<td>Book Name</td>
+					<td>Student ID</td>
+					<td>Student Name</td>
+					<td>Faculty</td>
 					<td>Semester</td>
-					<td th:text="${search.get().semester}"></td>
+					<td>Issued Date</td>
+					
 				</tr>
-				<tr>
-					<td>Issued Date:</td>
-					<td th:text="${search.get().issue_date}"></td>
+				<tr th:each="s:${ilist}">
+					<td th:text="${s.bid}"></td>
+					<td th:text="${s.bname}"></td>
+					<td th:text="${s.sid}"></td>
+					<td th:text="${s.sname}"></td>
+					<td th:text="${s.faculty}"></td>
+					<td th:text="${s.semester}"></td>
+					<td th:text="${s.issue_date}"></td>
 				</tr>
 			</table>
 		</section>

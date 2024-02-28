@@ -9,7 +9,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.Repository.appRepository;
 import com.example.demo.Repository.bookRepository;
 import com.example.demo.Repository.issueRepo;
 import com.example.demo.Repository.studentRepository;
@@ -24,8 +23,7 @@ public class appService {
 	@Autowired 
 	private JavaMailSender javaMailSender;
 	
-	@Autowired
-	private appRepository repo;
+	
 	
 	@Autowired
 	private bookRepository brepo;
@@ -38,30 +36,42 @@ public class appService {
 	
 	
 	
-	public void add_book(String id,String name,String faculty) {
+	public void add_book(String id,String name,String author,String publication,String faculty) {
 		Books b=new Books();
-		b.setId(id);
-		b.setFaculty(faculty);
-		b.setName(name);
-		b.setDate(LocalDate.now());
+		b.setBid(id);
+		b.setAdd_date(LocalDate.now());
+		b.setAuthor(author);
+		b.setPublication(publication);
+		b.setBname(name);
 		b.setStatus("Available");
+		b.setFaculty(faculty);
 		brepo.save(b);
 	}
 	
 	public void issue(String bid,String bname,int sid,String sname,int semester,String faculty) {
 		issue i=new issue();
 		
+		student ss=srepo.findById(sid).get();
 		List<Books>bList=brepo.bList(bid);
 		student s=new student();
 		for(Books book:bList) {
-			book.setDate(book.getDate());
+			book.setAdd_date(book.getAdd_date());
 			book.setFaculty(book.getFaculty());
-			book.setId(bid);
-			book.setName(bname);
+			book.setBid(bid);
+			book.setBname(bname);
+			book.setAuthor(book.getAuthor());
+			book.setPublication(book.getPublication());
 			book.setStudent(s);
 			s.getBookList().add(book);
 		}
 		s.setSid(sid);
+		s.setEmail(ss.getEmail());
+		s.setPassword(ss.getPassword());
+		s.setPhone(ss.getPhone());
+		s.setRole(ss.getRole());
+		s.setSid(ss.getSid());
+		s.setStatus(ss.getStatus());
+		s.setUsername(ss.getUsername());
 		s.setBookList(bList);
 		srepo.save(s);
 
@@ -99,7 +109,6 @@ public class appService {
 //		s.setName(sname);
 //		s.setSemester(semester);
 //		s.setFaculty(faculty);
-//		
 //		srepo.save(s);
 //	}
 	
@@ -110,18 +119,18 @@ public class appService {
 	}
 	
 	
-	public Optional<com.example.demo.entity.issue> searchIssuedBook(String bid){
-		Optional<com.example.demo.entity.issue>list=irepo.findById(bid);
+	public List<com.example.demo.entity.issue> searchIssuedBook(String bid,String name){
+		List<com.example.demo.entity.issue>list=irepo.findByIdOrName(bid, name);
 		return list;
 	}
 	
-	public Optional<Books> searchAvailableBook(String bid){
-		Optional<Books>list=brepo.findById(bid);
+	public List<Books> searchAvailableBook(String bid,String name,String status){
+		List<Books>list=brepo.findByIdOrName(bid,name,status);
 		return list;
 	}
 	
 	public List<Books>findByNameAndStatus(String bname,String status){
-		List<Books>list=brepo.findByNameAndStatus(bname,status);
+		List<Books>list=brepo.findByBnameAndStatus(bname,status);
 		return list;
 	}
 	public Books update_value(String id) {
@@ -130,12 +139,18 @@ public class appService {
 	}
 	
 	@Transactional
-	public void update_save(String bid,String bname,String faculty) {
+	public void update_save(String bid,String bname,String faculty,String author,String publication) {
+		Books bo=brepo.findById(bid).get();
+		
 		Books b=new Books();
 		b.setFaculty(faculty);
-		//b.setId(bid);
-		b.setName(bname);
-		brepo.update_save(bid, bname, faculty);
+		b.setBid(bid);
+		b.setBname(bname);
+		b.setAuthor(author);
+		b.setPublication(publication);
+		b.setAdd_date(bo.getAdd_date());
+		b.setStatus(bo.getStatus());
+		brepo.save(b);
 	}
 	
 	public void bdelete(String bid) {

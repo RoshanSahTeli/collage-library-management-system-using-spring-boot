@@ -7,9 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name ="student" )
@@ -24,23 +21,23 @@ public class student {
 //	@Size(max = 10,min = 3)
 	private String username;
 	
-	@NotBlank
-	@Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",message = "invalid email")
+//	@NotBlank
+	//@Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",message = "invalid email")
 	private String email;
 	
 //	@NotBlank
 //	@Size(max = 10,min = 4)
 	private String password;
 	
-	@NotBlank
+	
 	private String phone;
 	
 	private String role;
 	
 	
-	public student(@NotBlank int sid, @NotBlank @Size(max = 10, min = 3) String username,
-			@NotBlank @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "invalid email") String email,
-			@NotBlank @Size(max = 10, min = 4) String password, @NotBlank String phone, String role, String status,
+	public student( int sid,  String username,
+			 String email,
+			 String password, String phone, String role, String status,
 			List<Books> bookList) {
 		super();
 		this.sid = sid;
