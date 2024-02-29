@@ -35,19 +35,22 @@ private homeService hservice;
 	}
 	
 	@PostMapping("/add_book")
-	public String add_book(@RequestParam("book_id") String id,@RequestParam("book_name")
-	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("book_faculty")String faculty) {
+	public String add_book(@RequestParam("book_name")
+	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("Category")String category) {
 		
-		service.add_book(id, name,author,publication, faculty);
+		service.add_book( name,author,publication, category);
 		return "add_success";
 	}
 	
 	@GetMapping("/home")
-	public String home( Principal principal) {
+	public String home( Principal principal,Model model) {
 		student s=hservice.userStatus(principal.getName());
+		model.addAttribute("email", principal.getName());
+		student ss=service.findAdmin(principal.getName());
+		model.addAttribute("username",ss.getUsername());
 		String status=s.getStatus();
-		if(status.equals("Verfied")) {
-			return "login_success";
+		if(status.equals("Verified")) {
+			return "index";
 		}
 		else {
 			return "unverified";
@@ -56,6 +59,14 @@ private homeService hservice;
 		
 	}
 	
+	@GetMapping("/findAll")
+		public String findAll(Model model) {
+			List<Books>list=service.findAllBooks();
+			model.addAttribute("all", list);
+			return "allBooks";
+		}
+	
+	
 	@GetMapping("/issue_form")
 	public String issue_form() {
 		return "issue_form";
@@ -63,8 +74,7 @@ private homeService hservice;
 	
 	@PostMapping("/issue")
 	public String issue(@RequestParam("bid") String bid,@RequestParam("bname")String bname,
-			@RequestParam("sid") int sid,@RequestParam("sname")String sname,@RequestParam("semester")
-	int semester, @RequestParam("faculty")String faculty,Model  model) {
+			@RequestParam("sid") int sid,@RequestParam("sname")String sname, @RequestParam("category")String category,Model  model) {
 		
 		List<Books> l=service.check_book(bid,"Available");
 		Optional<student> s=service.check_student(sid);
@@ -80,7 +90,7 @@ private homeService hservice;
 			return "not_available";
 		}
 		else {
-		service.issue(bid, bname, sid, sname, semester, faculty);
+		service.issue(bid, bname, sid, sname, category);
 		service.setStatus(bid,"issued");
 		return "issue_success";}
 	}
@@ -215,7 +225,19 @@ private homeService hservice;
 	
 		return "login_success";
 	}
+	@GetMapping("/issue_search")
+	public String issue_search(@RequestParam("id")String bid,Model model) {
+		Books b=service.issue_search(bid);
+		model.addAttribute("issue", b);
+		return "issue";
+	}
 	
+//	@GetMapping("/findLatest")
+//	public String findLatest() {
+//		Books b=service.findLatest();
+//		System.out.println(b.getBid());
+//		return "latest";
+//	}
 
 	
 

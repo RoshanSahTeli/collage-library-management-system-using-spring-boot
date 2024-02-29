@@ -36,4 +36,6 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	@Query("select i from Books i where i.bid= :bid or i.bname= :bname and i.status= :status")
 	public List<Books>findByIdOrName(@Param("bid")String bid,@Param("bname")String bname,
 			@Param("status")String status);
+	
+	public Books findFirstByBnameOrderByDateDesc(String name);
 }

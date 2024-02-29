@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,19 +37,35 @@ public class appService {
 	
 	
 	
-	public void add_book(String id,String name,String author,String publication,String faculty) {
+	public void add_book(String name,String author,String publication,String Category) {
 		Books b=new Books();
+		
+		Books boo=brepo.findFirstByBnameOrderByDateDesc(name);
+		if(boo==null) {
+			String id=name+1;
+			b.setBid(id);
+		}else {
+			
+		
+		String bname=boo.getBid();
+		int name_length=name.length();
+		System.out.println(bname);
+		int num=Integer.parseInt(bname.substring(name_length))+1;
+		System.out.println(num);
+		String id=name+num;
 		b.setBid(id);
-		b.setAdd_date(LocalDate.now());
+		}		
+		
+		b.setAdd_date(LocalDateTime.now());
 		b.setAuthor(author);
 		b.setPublication(publication);
 		b.setBname(name);
 		b.setStatus("Available");
-		b.setFaculty(faculty);
+		b.setCategory(Category);
 		brepo.save(b);
 	}
 	
-	public void issue(String bid,String bname,int sid,String sname,int semester,String faculty) {
+	public void issue(String bid,String bname,int sid,String sname,String category) {
 		issue i=new issue();
 		
 		student ss=srepo.findById(sid).get();
@@ -56,7 +73,7 @@ public class appService {
 		student s=new student();
 		for(Books book:bList) {
 			book.setAdd_date(book.getAdd_date());
-			book.setFaculty(book.getFaculty());
+			book.setCategory(book.getCategory());
 			book.setBid(bid);
 			book.setBname(bname);
 			book.setAuthor(book.getAuthor());
@@ -80,9 +97,8 @@ public class appService {
 		i.setBname(bname);
 		i.setSid(sid);
 		i.setSname(sname);
-		i.setSemester(semester);
-		i.setFaculty(faculty);
-		i.setIssue_date(LocalDate.now());
+		i.setCategory(category);
+		i.setIssue_date(LocalDateTime.now());
 		irepo.save(i);
 		
 		
@@ -139,11 +155,11 @@ public class appService {
 	}
 	
 	@Transactional
-	public void update_save(String bid,String bname,String faculty,String author,String publication) {
+	public void update_save(String bid,String bname,String Category,String author,String publication) {
 		Books bo=brepo.findById(bid).get();
 		
 		Books b=new Books();
-		b.setFaculty(faculty);
+		b.setCategory(Category);
 		b.setBid(bid);
 		b.setBname(bname);
 		b.setAuthor(author);
@@ -190,5 +206,19 @@ public class appService {
 	}
 	public void reject(int id) {
 		srepo.deleteById(id);
+	}
+	
+	public Books issue_search(String bid) {
+		Books b=brepo.findById(bid).get();
+		return b;}
+	
+//		public Books findLatest() {
+//			return brepo.findTopByOrderByDateDesc();
+//		}
+	public student findAdmin(String username) {
+		return srepo.findByEmail(username);
+	}
+	public List<Books> findAllBooks() {
+		return brepo.findAll();
 	}
 }

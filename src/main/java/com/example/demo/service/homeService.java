@@ -21,6 +21,7 @@ public class homeService {
 		s.setPassword(new BCryptPasswordEncoder().encode(stu.getPassword()));
 		s.setPhone(stu.getPhone());
 		s.setUsername(stu.getUsername());
+		s.setAddress(stu.getAddress());
 		s.setStatus("Unverified");
 		s.setRole("USER");
 		repo.save(s);

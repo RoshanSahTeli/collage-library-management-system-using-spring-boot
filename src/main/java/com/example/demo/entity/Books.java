@@ -1,8 +1,6 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
-
-import org.hibernate.annotations.ManyToAny;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,9 +21,9 @@ public class Books {
 	
 	private String publication;
 	
-	private LocalDate add_date;
+	public LocalDateTime date;
 	
-	private String faculty;
+	private String Category;
 	 
 	private String status;
 	
@@ -65,20 +63,20 @@ public class Books {
 		this.publication = publication;
 	}
 
-	public LocalDate getAdd_date() {
-		return add_date;
+	public LocalDateTime getAdd_date() {
+		return date;
 	}
 
-	public void setAdd_date(LocalDate add_date) {
-		this.add_date = add_date;
+	public void setAdd_date(LocalDateTime add_date) {
+		this.date = add_date;
 	}
 
-	public String getFaculty() {
-		return faculty;
+	public String getCategory() {
+		return Category;
 	}
 
-	public void setFaculty(String faculty) {
-		this.faculty = faculty;
+	public void setCategory(String Category) {
+		this.Category = Category;
 	}
 
 	public String getStatus() {
@@ -97,15 +95,15 @@ public class Books {
 		this.student = student;
 	}
 
-	public Books(String bid, String bname, String author, String publication, LocalDate add_date, String faculty,
+	public Books(String bid, String bname, String author, String publication, LocalDateTime add_date, String Category,
 			String status, com.example.demo.entity.student student) {
 		super();
 		this.bid = bid;
 		this.bname = bname;
 		Author = author;
 		this.publication = publication;
-		this.add_date = add_date;
-		this.faculty = faculty;
+		this.date = add_date;
+		this.Category = Category;
 		this.status = status;
 		this.student = student;
 	}

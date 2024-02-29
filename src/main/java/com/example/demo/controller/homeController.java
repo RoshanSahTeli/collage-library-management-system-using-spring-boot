@@ -35,9 +35,7 @@ public class homeController {
 	 @PostMapping("/signup_save")
 	 public String signup_save(@Valid @ModelAttribute(value="student") student stu, BindingResult result) {
 		 
-			 System.out.println(result);
-			 System.out.println(stu.getEmail());
-			 System.out.println(stu.getPassword());
+			
 			 service.save_signup(stu);
 		 
 		 return "login_form";
