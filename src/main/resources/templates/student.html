@@ -1,5 +1,7 @@
 <html th:replace="basee::layout(~{::section})">
-	<head></head>
+	<head>
+		
+	</head>
 	<body>
 		<section>
 			<main id="main" class="main">
@@ -22,13 +24,13 @@
                 <thead>
                   <tr>
                     <th>
-                    	Book ID
+                    	Student ID
                     </th>
-                    <th>Book Name</th>
-                    <th>Author</th>
-                    <th>Publication</th>
-                    <th>Category</th>
-                    <th>Added Date</th>
+                    <th>Username</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
                     <th>Status</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -36,16 +38,16 @@
                 </thead>
                 <tbody>
                  
-                  <tr  th:each="e:${all}">
-                    <td th:text="${e.bid}"></td>
-                    <td th:text="${e.bname}"></td>
-                    <td th:text="${e.author}"></td>
-                    <td th:text="${e.publication}"></td>
-                    <td th:text="${e.category}"></td>
-                    <td th:text="${e.date}"></td>
-                     <td th:text="${e.status}"></td>
-                     <td> <a th:href="@{/Admin/update(id=${e.bid})}">update</a> </td>
-                     <td> <a th:href="@{/Admin/delete(id=${e.bid})}">delete</a> </td>
+                  <tr  th:each="s:${slist}">
+                    <td th:text="${s.sid}"></td>
+                    <td th:text="${s.username}"></td>
+                    <td th:text="${s.address}"></td>
+                    <td th:text="${s.email}"></td>
+                    <td th:text="${s.phone}"></td>
+                    <td th:text="${s.role}"></td>
+                     <td th:text="${s.status}"></td>
+                     <td> <a th:href="@{/Admin/update(id=${s.sid})}">update</a> </td>
+                     <td> <a th:href="@{/Admin/delete(id=${s.sid})}">delete</a> </td>
                   </tr>
                  
                 </tbody>
@@ -61,5 +63,6 @@
 
   </main><!-- End #main -->
 		</section>
+		
 	</body>
 </html>

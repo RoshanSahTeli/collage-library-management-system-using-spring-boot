@@ -24,6 +24,6 @@ public interface studentRepository extends JpaRepository<student, Integer> {
 //	@Query("select s from student s where s.status= :status and s.sid= :sid")
 //	public void findStatusAnd 
 	
-	
+	public List<student> findByRoleAndStatus(String role,String status);
 
 }

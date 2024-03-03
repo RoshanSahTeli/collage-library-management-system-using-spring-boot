@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -220,5 +219,8 @@ public class appService {
 	}
 	public List<Books> findAllBooks() {
 		return brepo.findAll();
+	}
+	public List<student> find_student(String role,String status){
+		return srepo.findByRoleAndStatus(role, status);
 	}
 }

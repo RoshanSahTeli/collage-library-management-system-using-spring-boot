@@ -1,11 +1,12 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Repository.studentRepository;
-import com.example.demo.entity.Books;
 import com.example.demo.entity.student;
 
 @Component
@@ -32,5 +33,9 @@ public class homeService {
 		 student s= repo.findByEmail(email);
 		 return s;
 	}
+//	public List<student> request(String status){
+//		List<student>list=repo.findByStatus(status);
+//		return list;
+//	}
 
 }

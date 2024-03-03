@@ -35,8 +35,8 @@ private homeService hservice;
 	}
 	
 	@PostMapping("/add_book")
-	public String add_book(@RequestParam("book_name")
-	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("Category")String category) {
+	public String add_book(@RequestParam("bname")
+	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("category")String category) {
 		
 		service.add_book( name,author,publication, category);
 		return "add_success";
@@ -44,6 +44,10 @@ private homeService hservice;
 	
 	@GetMapping("/home")
 	public String home( Principal principal,Model model) {
+		List<student> list=  service.request("Unverified");
+		int count=list.size();
+		 model.addAttribute("list",list);
+		 model.addAttribute("count", count);
 		student s=hservice.userStatus(principal.getName());
 		model.addAttribute("email", principal.getName());
 		student ss=service.findAdmin(principal.getName());
@@ -111,7 +115,10 @@ private homeService hservice;
 	@GetMapping("/show_requests")
 	public String requests(Model model) {
 		 List<student> list=  service.request("Unverified");
+		 int count=list.size();
 		 model.addAttribute("list",list);
+		 model.addAttribute("count", count);
+		 System.out.println(count);
 		return "request";
 	}
 	
@@ -179,15 +186,15 @@ private homeService hservice;
 		Books b=service.update_value(id);
 		model.addAttribute("values", b);
 		
-		return "update_form";
+		return "updateForm";
 	}
 	
 	@PostMapping("/update_save")
 	public String update_save(@RequestParam("bid")String bid,@RequestParam("bname")String bname,
-			@RequestParam("faculty")String faculty,@RequestParam("author")String author,
+			@RequestParam("category")String category,@RequestParam("author")String author,
 			@RequestParam("publication")String publication) {
 			
-		service.update_save(bid, bname, faculty,author,publication);
+		service.update_save(bid, bname, category,author,publication);
 		return "updated";
 	}
 	
@@ -238,6 +245,13 @@ private homeService hservice;
 //		System.out.println(b.getBid());
 //		return "latest";
 //	}
+	
+	@GetMapping("/students")
+	public String view_student(Model model) {
+		List<student> slist=service.find_student("USER", "Verified");
+		model.addAttribute("slist", slist);
+		return "student";
+	}
 
 	
 

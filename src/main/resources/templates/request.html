@@ -1,33 +1,64 @@
-<html th:replace="base::layout(~{::section})">
+<html th:replace="basee::layout(~{::section})">
 	<head>
-		
+		<title>Requests</title>
 	</head>
 	<body>
-		<section style="display: flex; justify-content: center; align-items: center; height: 350px;">
-			<table border="1">
-				<tr>
-					<td>ID</td>
+		<section>
+			<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Data Tables</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+            
+            
+
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <td>ID</td>
 					<td>Username</td>
 					<td>Email</td>
-					<td>Password</td>
+					<td>Address</td>
 					<td>Phone</td>
 					<td>Status</td>
 					<td>Role</td>
 					<td>Verfiy</td>
 					<td>Reject</td>
-				</tr>
-				<tr th:each="l:${list}">
+                  </tr>
+                </thead>
+                <tbody>
+                 
+                <tr th:each="l:${list}">
 					<td th:text="${l.sid}"></td>
 					<td th:text="${l.username}"></td>
 					<td th:text="${l.email}"></td>
-					<td th:text="${l.password}"></td>
+					<td th:text="${l.address}"></td>
 					<td th:text="${l.phone}"></td>
 					<td th:text="${l.status}"></td>
 					<td th:text="${l.role}"></td>
 					<td> <a th:href="@{/Admin/verify(id=${l.sid})}">verify</a>   </td>
 					<td> <a th:href="@{/Admin/reject(id=${l.sid})}">reject</a>  </td>
 				</tr>
-			</table>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
 		</section>
 	</body>
 </html>

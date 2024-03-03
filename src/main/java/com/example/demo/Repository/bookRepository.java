@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.Books;
-import com.example.demo.entity.issue;
 
 public interface bookRepository extends JpaRepository<Books, String> {
 	

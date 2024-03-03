@@ -1,0 +1,33 @@
+<html th:replace="base::layout(~{::section})">
+	<head>
+		
+	</head>
+	<body>
+		<section style="display: flex; justify-content: center; align-items: center; height: 350px;">
+			<table border="1">
+				<tr>
+					<td>ID</td>
+					<td>Username</td>
+					<td>Email</td>
+					<td>Password</td>
+					<td>Phone</td>
+					<td>Status</td>
+					<td>Role</td>
+					<td>Verfiy</td>
+					<td>Reject</td>
+				</tr>
+				<tr th:each="l:${list}">
+					<td th:text="${l.sid}"></td>
+					<td th:text="${l.username}"></td>
+					<td th:text="${l.email}"></td>
+					<td th:text="${l.password}"></td>
+					<td th:text="${l.phone}"></td>
+					<td th:text="${l.status}"></td>
+					<td th:text="${l.role}"></td>
+					<td> <a th:href="@{/Admin/verify(id=${l.sid})}">verify</a>   </td>
+					<td> <a th:href="@{/Admin/reject(id=${l.sid})}">reject</a>  </td>
+				</tr>
+			</table>
+		</section>
+	</body>
+</html>
