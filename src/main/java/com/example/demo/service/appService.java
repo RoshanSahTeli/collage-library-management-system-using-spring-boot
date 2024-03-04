@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Repository.bookRepository;
@@ -16,14 +17,13 @@ import com.example.demo.entity.Books;
 import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 @Component
 public class appService {
 	@Autowired 
 	private JavaMailSender javaMailSender;
-	
-	
 	
 	@Autowired
 	private bookRepository brepo;
@@ -153,7 +153,7 @@ public class appService {
 		return b;
 	}
 	
-	@Transactional
+	
 	public void update_save(String bid,String bname,String Category,String author,String publication) {
 		Books bo=brepo.findById(bid).get();
 		
@@ -222,5 +222,22 @@ public class appService {
 	}
 	public List<student> find_student(String role,String status){
 		return srepo.findByRoleAndStatus(role, status);
+	}
+	public void stuSave(student stu,String role) {
+		student s=new student();
+		s.setEmail(stu.getEmail());
+		s.setSid(stu.getSid());
+		s.setPassword(new BCryptPasswordEncoder().encode(stu.getPassword()));
+		s.setPhone(stu.getPhone());
+		s.setUsername(stu.getUsername());
+		s.setAddress(stu.getAddress());
+		s.setStatus("Verified");
+		s.setRole(role);
+		srepo.save(s);
+		
+	}
+	
+	public List<Books> findCategory(String category){
+		return brepo.findByCategory(category);
 	}
 }

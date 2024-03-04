@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +8,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +20,9 @@ import com.example.demo.entity.student;
 import com.example.demo.service.appService;
 import com.example.demo.service.homeService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/Admin")
@@ -35,11 +40,11 @@ private homeService hservice;
 	}
 	
 	@PostMapping("/add_book")
-	public String add_book(@RequestParam("bname")
-	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("category")String category) {
-		
+	public void add_book(@RequestParam("bname")
+	String name, @RequestParam("author")String author, @RequestParam("publication")String publication ,@RequestParam("category")String category,
+	HttpServletResponse response) throws IOException {
 		service.add_book( name,author,publication, category);
-		return "add_success";
+		response.sendRedirect("/Admin/findAll");
 	}
 	
 	@GetMapping("/home")
@@ -190,16 +195,22 @@ private homeService hservice;
 	}
 	
 	@PostMapping("/update_save")
-	public String update_save(@RequestParam("bid")String bid,@RequestParam("bname")String bname,
+	public void update_save(@RequestParam("bid")String bid,@RequestParam("bname")String bname,
 			@RequestParam("category")String category,@RequestParam("author")String author,
-			@RequestParam("publication")String publication) {
+			@RequestParam("publication")String publication,HttpServletResponse response) {
 			
 		service.update_save(bid, bname, category,author,publication);
-		return "updated";
+		try {
+			response.sendRedirect("/Admin/findAll");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@GetMapping("/delete")
-	public String  delete( @RequestParam("id") String bid) {
+	public void  delete( @RequestParam("id") String bid, HttpServletResponse response) throws IOException {
 		
 		Books b=service.find(bid);
 		String status=b.getStatus();
@@ -211,7 +222,7 @@ private homeService hservice;
 		else {
 			service.bdelete(bid);
 		}
-		return "login_success";
+		response.sendRedirect("/Admin/findAll");
 	}
 	@GetMapping("/verify")
 	public String verify( @RequestParam("id")int sid) {
@@ -252,7 +263,45 @@ private homeService hservice;
 		model.addAttribute("slist", slist);
 		return "student";
 	}
+	
+	@GetMapping("/stuForm")
+	 public String addstu(HttpSession session) {
+		 session.setAttribute("role","USER");
+		 return "add_student_form";
+	 }
+	
+	 @PostMapping("/stuSave")
+	 public String stuSave(@Valid @ModelAttribute(value="student") student stu, BindingResult result
+			 ,HttpSession session) {
+		 	
+			String role=(String) session.getAttribute("role");
+			service.stuSave(stu,role);
+		 
+		 return "add_student_form";
+		 
+	 }
+	 
+	 @GetMapping("/admin_form")
+	 public String addAdminForm(HttpSession session) {
+		 session.setAttribute("role", "ADMIN");
+		 return "add_admin_form";
+	 }
+	 
+	 @GetMapping("/findAdmins")
+	 public String findAdmins(Model model) {
+		 List<student> slist=service.find_student("ADMIN","Verified");
+		 model.addAttribute("slist", slist);
+		 return "student";
+	 }
+	 
+	 @GetMapping("/fiction")
+	 public String fiction(Model model) {
+		 List<Books> list=service.findCategory("fiction");
+		 model.addAttribute("cat", list);
+		 return "book_category";
+	 }
 
+	 
 	
 
 }

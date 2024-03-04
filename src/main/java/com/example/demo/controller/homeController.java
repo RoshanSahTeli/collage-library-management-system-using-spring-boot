@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.demo.entity.student;
 import com.example.demo.service.homeService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -24,7 +23,7 @@ public class homeController {
 	
 	 @GetMapping("/login_form")
 	 public String form() {
-		
+		 	
 		 return "login_form";
 	 }
 	 
@@ -36,13 +35,14 @@ public class homeController {
 	 
 	 @PostMapping("/signup_save")
 	 public String signup_save(@Valid @ModelAttribute(value="student") student stu, BindingResult result) {
-		 
+		 		
 			
 			 service.save_signup(stu);
 		 
 		 return "login_form";
 		 
 	 }
+	 
 	 
 
 }

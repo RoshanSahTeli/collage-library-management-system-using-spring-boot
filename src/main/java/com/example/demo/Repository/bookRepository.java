@@ -37,4 +37,10 @@ public interface bookRepository extends JpaRepository<Books, String> {
 			@Param("status")String status);
 	
 	public Books findFirstByBnameOrderByDateDesc(String name);
+
+
+	
+	//@Query("select s from Books s where s.category= :cat")
+	List<Books> findByCategory(String category);
+	
 }

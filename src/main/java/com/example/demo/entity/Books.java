@@ -23,7 +23,7 @@ public class Books {
 	
 	public LocalDateTime date;
 	
-	private String Category;
+	public String category;
 	 
 	private String status;
 	
@@ -72,11 +72,11 @@ public class Books {
 	}
 
 	public String getCategory() {
-		return Category;
+		return category;
 	}
 
 	public void setCategory(String Category) {
-		this.Category = Category;
+		this.category = Category;
 	}
 
 	public String getStatus() {
@@ -103,7 +103,7 @@ public class Books {
 		Author = author;
 		this.publication = publication;
 		this.date = add_date;
-		this.Category = Category;
+		this.category = Category;
 		this.status = status;
 		this.student = student;
 	}
