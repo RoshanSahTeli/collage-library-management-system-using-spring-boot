@@ -10,7 +10,7 @@ import com.example.demo.entity.issue;
 
 public interface issueRepo extends JpaRepository<issue, String> {
 	
-	@Query("select i from issue i where i.bid= :bid or i.bname= :bname")
-	public List<issue> findByIdOrName(@Param("bid")String bid,@Param("bname")String bname);
+	@Query("select i from issue i where i.bid= :bid")
+	public List<issue> findByIdOrName(@Param("bid")String bid);
 
 }

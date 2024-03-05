@@ -7,7 +7,7 @@
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1>Requests</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -18,7 +18,7 @@
             <div class="card-body">
             
             
-
+				<div  th:if="${list!=null}">
               <!-- Table with stripped rows -->
               <table class="table datatable">
                 <thead>
@@ -44,12 +44,18 @@
 					<td th:text="${l.phone}"></td>
 					<td th:text="${l.status}"></td>
 					<td th:text="${l.role}"></td>
-					<td> <a th:href="@{/Admin/verify(id=${l.sid})}">verify</a>   </td>
-					<td> <a th:href="@{/Admin/reject(id=${l.sid})}">reject</a>  </td>
+					<td><a class="btn btn-success btn-sm" th:href="@{/Admin/verify(id=${l.sid})}">Verify</a> </td>
+					
+					<td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/reject(id=${l.sid})}">Reject</a>  </td>
 				</tr>
                 </tbody>
               </table>
+              </div>
               <!-- End Table with stripped rows -->
+              
+              <div th:if="${#lists.isEmpty(list)}">
+				  <p>No any Request</p>
+			  </div>
 
             </div>
           </div>

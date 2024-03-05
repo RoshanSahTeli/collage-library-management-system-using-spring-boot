@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Books;
 import com.example.demo.entity.student;
 import com.example.demo.service.appService;
@@ -71,6 +72,19 @@ private homeService hservice;
 	@GetMapping("/findAll")
 		public String findAll(Model model) {
 			List<Books>list=service.findAllBooks();
+			for(Books b:list) {
+				if(b.getStatus().equals("Available")) {
+					String url="/Admin/issue_search";
+					System.out.println(b.getBid());
+					model.addAttribute("link", url);
+					model.addAttribute("link_name", "Issue");
+				}
+				else {
+					String url="/Admin/issue_details";
+					model.addAttribute("link", url);
+					model.addAttribute("link_name", "Details");
+				}
+			}
 			model.addAttribute("all", list);
 			return "allBooks";
 		}
@@ -83,7 +97,7 @@ private homeService hservice;
 	
 	@PostMapping("/issue")
 	public String issue(@RequestParam("bid") String bid,@RequestParam("bname")String bname,
-			@RequestParam("sid") int sid,@RequestParam("sname")String sname, @RequestParam("category")String category,Model  model) {
+			@RequestParam("sid") int sid,@RequestParam("sname")String sname,Model  model) {
 		
 		List<Books> l=service.check_book(bid,"Available");
 		Optional<student> s=service.check_student(sid);
@@ -99,7 +113,7 @@ private homeService hservice;
 			return "not_available";
 		}
 		else {
-		service.issue(bid, bname, sid, sname, category);
+		service.issue(bid, sid, sname,bname);
 		service.setStatus(bid,"issued");
 		return "issue_success";}
 	}
@@ -117,15 +131,7 @@ private homeService hservice;
 //		return "add_student_Success";
 //	}
 	
-	@GetMapping("/show_requests")
-	public String requests(Model model) {
-		 List<student> list=  service.request("Unverified");
-		 int count=list.size();
-		 model.addAttribute("list",list);
-		 model.addAttribute("count", count);
-		 System.out.println(count);
-		return "request";
-	}
+	
 	
 	@GetMapping ("/csit")
 	public String csit() {
@@ -159,7 +165,7 @@ private homeService hservice;
 	@GetMapping("/search")
 	public String search(@RequestParam("search")String id,@RequestParam("search")String name,   Model model) {
 		
-		List<com.example.demo.entity.issue> ilist=service.searchIssuedBook(id,name);
+		List<com.example.demo.entity.issue> ilist=service.searchIssuedBook(id);
 		List<Books>blist=service.searchAvailableBook(id,name,"Available");
 		model.addAttribute("ilist", ilist);
 		model.addAttribute("alist", blist);
@@ -170,20 +176,20 @@ private homeService hservice;
 		
 
 	}
-	@GetMapping("/available_details")
-	public String availableBooks(Model model,HttpSession session){
-		String bname=(String) session.getAttribute("bname");
-		List<Books>list=service.findByNameAndStatus(bname, "Available");
-		model.addAttribute("alist", list);
-		return "book_details";
-	}
-	@GetMapping("/issued_details")
-	public String issuedBooks(Model model,HttpSession session){
-		String bname=(String) session.getAttribute("bname");
-		List<Books>list=service.findByNameAndStatus(bname, "issued");
-		model.addAttribute("alist", list);
-		return "book_details";
-	}
+//	@GetMapping("/available_details")
+//	public String availableBooks(Model model,HttpSession session){
+//		String bname=(String) session.getAttribute("bname");
+//		List<Books>list=service.findByNameAndStatus(bname, "Available");
+//		model.addAttribute("alist", list);
+//		return "book_details";
+//	}
+//	@GetMapping("/issued_details")
+//	public String issuedBooks(Model model,HttpSession session){
+//		String bname=(String) session.getAttribute("bname");
+//		List<Books>list=service.findByNameAndStatus(bname, "issued");
+//		model.addAttribute("alist", list);
+//		return "book_details";
+//	}
 	
 	@GetMapping("/update")
 	public String update_form(@RequestParam("id")String id,  Model model) {
@@ -224,14 +230,24 @@ private homeService hservice;
 		}
 		response.sendRedirect("/Admin/findAll");
 	}
+	
+	@GetMapping("/show_requests")
+	public String requests(Model model) {
+		 List<student> list=  service.request("Unverified");
+		 int count=list.size();
+		 model.addAttribute("list",list);
+		 model.addAttribute("count", count);
+		 System.out.println(count);
+		return "request";
+	}
 	@GetMapping("/verify")
-	public String verify( @RequestParam("id")int sid) {
+	public void verify( @RequestParam("id")int sid,HttpServletResponse response) throws IOException {
 		service.verify("Verfied", sid);
 		student s=service.findStudent(sid);
 		
 		//service.mail(s.getEmail(),"You are verified user of Library","verficication");
-	
-		return "login_success";
+		response.sendRedirect("/Admin/show_requests");
+		
 		
 	}
 	
@@ -243,12 +259,7 @@ private homeService hservice;
 	
 		return "login_success";
 	}
-	@GetMapping("/issue_search")
-	public String issue_search(@RequestParam("id")String bid,Model model) {
-		Books b=service.issue_search(bid);
-		model.addAttribute("issue", b);
-		return "issue";
-	}
+	
 	
 //	@GetMapping("/findLatest")
 //	public String findLatest() {
@@ -294,14 +305,59 @@ private homeService hservice;
 		 return "student";
 	 }
 	 
+	 
+
+	 @GetMapping("/details")
+	 public String book_details(@RequestParam("name")String bname,Model model) {
+		 List<Books>list=service.findByName(bname);
+		 
+		 model.addAttribute("blist", list);
+		 return "book_details";
+		 
+	 }
+	 @GetMapping("/issue_search")
+		public String issue_search(@RequestParam("id")String bid,Model model) {
+			Books b=service.issue_search(bid);
+			model.addAttribute("issue", b);
+			return "issue";
+		}
+	 
 	 @GetMapping("/fiction")
-	 public String fiction(Model model) {
-		 List<Books> list=service.findCategory("fiction");
-		 model.addAttribute("cat", list);
+	 public String fiction(Model model) {		 
+		List<BookCountDTO>bcd=service.list("fiction");
+		model.addAttribute("groupby", bcd);
 		 return "book_category";
 	 }
-
 	 
-	
-
+	 @GetMapping("/horror")
+	 public String horror(Model model) {		 
+		List<BookCountDTO>bcd=service.list("horror");
+		model.addAttribute("groupby", bcd);
+		 return "book_category";
+	 }
+	 @GetMapping("/poetry")
+	 public String poetry(Model model) {		 
+		List<BookCountDTO>bcd=service.list("poetry");
+		model.addAttribute("groupby", bcd);
+		 return "book_category";
+	 }
+	 @GetMapping("/drama")
+	 public String drama(Model model) {		 
+		List<BookCountDTO>bcd=service.list("drama");
+		model.addAttribute("groupby", bcd);
+		 return "book_category";
+	 }
+	 @GetMapping("/history")
+	 public String history(Model model) {		 
+		List<BookCountDTO>bcd=service.list("history");
+		model.addAttribute("groupby", bcd);
+		 return "book_category";
+	 }
+	 
+	 @GetMapping("/issue_details")
+	 public String issue_details(@RequestParam("id")String bid,Model model) {
+		 com.example.demo.entity.issue i=service.issue_details(bid);
+		 model.addAttribute("issue_details", i);
+		 return "issue_details";
+	 }
 }

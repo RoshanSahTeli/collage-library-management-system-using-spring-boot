@@ -4,7 +4,8 @@
 	</head>
 	<body>
 		<section>
-		<main id="main" class="main">
+			
+  <main id="main" class="main">
 
     <div class="pagetitle">
       <h1>Form Elements</h1>
@@ -23,46 +24,55 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Issue Form</h5>
+              <h5 class="card-title">Issue Book</h5>
 
               <!-- General Form Elements -->
-              <form th:action="@{/Admin/issue}" method="post">
-				
-				 <div class="row mb-3">
+              <form th:action="@{/Admin/issue}" method="post" th:object="${issue}">
+				  <div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Book ID</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="bid">
+                    <input type="text" class="form-control" name="bid" th:value="*{bid}" >
                   </div>
                 </div>
-				
-                <div class="row mb-3">
+                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Book Name</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="bname">
+                    <input type="text" class="form-control" name="bname" th:value="*{bname}" >
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <label for="inputEmail" class="col-sm-2 col-form-label">Student ID</label>
+                  <label for="inputText" class="col-sm-2 col-form-label">Student ID</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="sid">
+                    <input type="text" class="form-control" name="sid" >
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Student Name</label>
+                  <label for="inputEmail" class="col-sm-2 col-form-label">Student Name</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="sname">
                   </div>
                 </div>
-               <!-- <div class="row mb-3">
+                <!--<div class="row mb-3">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Publication</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="publication" th:value="*{publication}">
+                  </div>
+                </div>
+                <div class="row mb-3">
                   <label for="inputNumber" class="col-sm-2 col-form-label">Category</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="category">
+                    <input type="text" class="form-control" name="category" th:value="*{category}">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputNumber" class="col-sm-2 col-form-label">Status</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="status" th:value="*{status}">
                   </div>
                 </div>-->
-  
                 
                 <div class="row mb-3">
-                 
+                  
                   <div class="col-sm-10">
                     <button type="submit" class="btn btn-primary">Issue</button>
                   </div>

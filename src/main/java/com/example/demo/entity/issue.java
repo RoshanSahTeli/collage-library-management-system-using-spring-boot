@@ -16,14 +16,22 @@ public class issue {
 	
 	@Id
 	private String bid;
+	 private String bname;
 	
-	private String bname;
 	
+	public String getBname() {
+		return bname;
+	}
+
+	public void setBname(String bname) {
+		this.bname = bname;
+	}
+
 	private int sid;
 	
 	private String sname;
 	
-	private String Category;
+	
 	
 	private LocalDateTime issue_date;
 
@@ -35,13 +43,9 @@ public class issue {
 		this.bid = bid;
 	}
 
-	public String getBname() {
-		return bname;
-	}
 
-	public void setBname(String bname) {
-		this.bname = bname;
-	}
+
+	
 
 	public int getSid() {
 		return sid;
@@ -59,13 +63,9 @@ public class issue {
 		this.sname = sname;
 	}
 
-	public String getCategory() {
-		return Category;
-	}
+	
 
-	public void setCategory(String category) {
-		Category = category;
-	}
+	
 
 	public LocalDateTime getIssue_date() {
 		return issue_date;
@@ -77,17 +77,17 @@ public class issue {
 
 	@Override
 	public String toString() {
-		return "issue [bid=" + bid + ", bname=" + bname + ", sid=" + sid + ", sname=" + sname + ", Category=" + Category
+		return "issue [bid=" + bid + ", sid=" + sid + ", sname=" + sname 
 				+ ", issue_date=" + issue_date + "]";
 	}
 
-	public issue(String bid, String bname, int sid, String sname, String category, LocalDateTime issue_date) {
+	public issue(String bid, int sid, String sname, LocalDateTime issue_date,String bname) {
 		super();
 		this.bid = bid;
-		this.bname = bname;
+		this.bname=bname;
 		this.sid = sid;
 		this.sname = sname;
-		Category = category;
+		
 		this.issue_date = issue_date;
 	}
 

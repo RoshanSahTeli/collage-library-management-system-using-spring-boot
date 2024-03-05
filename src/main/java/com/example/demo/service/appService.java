@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.Repository.bookRepository;
 import com.example.demo.Repository.issueRepo;
 import com.example.demo.Repository.studentRepository;
+import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Books;
 import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
@@ -41,17 +42,15 @@ public class appService {
 		
 		Books boo=brepo.findFirstByBnameOrderByDateDesc(name);
 		if(boo==null) {
-			String id=name+1;
+			String id=name.replaceAll("\\s","")+1;
 			b.setBid(id);
 		}else {
-			
-		
 		String bname=boo.getBid();
-		int name_length=name.length();
-		System.out.println(bname);
+		String new_name=name.replace(" ", "");
+		int name_length=new_name.length();
 		int num=Integer.parseInt(bname.substring(name_length))+1;
 		System.out.println(num);
-		String id=name+num;
+		String id=new_name+num;
 		b.setBid(id);
 		}		
 		
@@ -64,7 +63,7 @@ public class appService {
 		brepo.save(b);
 	}
 	
-	public void issue(String bid,String bname,int sid,String sname,String category) {
+	public void issue(String bid,int sid,String sname,String bname) {
 		issue i=new issue();
 		
 		student ss=srepo.findById(sid).get();
@@ -96,7 +95,7 @@ public class appService {
 		i.setBname(bname);
 		i.setSid(sid);
 		i.setSname(sname);
-		i.setCategory(category);
+		
 		i.setIssue_date(LocalDateTime.now());
 		irepo.save(i);
 		
@@ -134,8 +133,8 @@ public class appService {
 	}
 	
 	
-	public List<com.example.demo.entity.issue> searchIssuedBook(String bid,String name){
-		List<com.example.demo.entity.issue>list=irepo.findByIdOrName(bid, name);
+	public List<com.example.demo.entity.issue> searchIssuedBook(String bid){
+		List<com.example.demo.entity.issue>list=irepo.findByIdOrName(bid);
 		return list;
 	}
 	
@@ -239,5 +238,21 @@ public class appService {
 	
 	public List<Books> findCategory(String category){
 		return brepo.findByCategory(category);
+	}
+	
+	public List<BookCountDTO> list(String category){
+		
+		List<BookCountDTO> ll=brepo.countBooksByName(category);
+		return ll;
+		
+		
+		
+	}
+	
+	public List<Books> findByName(String name){
+		return brepo.findByBname(name);
+	}
+	public com.example.demo.entity.issue issue_details(String bid) {
+		return irepo.findById(bid).get();
 	}
 }

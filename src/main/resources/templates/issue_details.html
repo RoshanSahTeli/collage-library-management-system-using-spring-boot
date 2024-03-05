@@ -1,11 +1,13 @@
-<html  th:replace="basee::layout(~{::section})">
-	<head></head>
+<html th:replace="basee::layout(~{::section})">
+	<head>
+		
+	</head>
 	<body>
 		<section>
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1>Books</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -25,26 +27,22 @@
                     	Book ID
                     </th>
                     <th>Book Name</th>
-                    <th>Author</th>
-                    <th>Publication</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Issue</th>
-                    <th>Update</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Issue Date</th>
+                   
                     <th>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                  
-                  <tr  th:each="e:${blist}">
+                  <tr  th:each="e:${issue_details}">
                     <td th:text="${e.bid}"></td>
                     <td th:text="${e.bname}"></td>
-                    <td th:text="${e.author}"></td>
-                    <td th:text="${e.publication}"></td>
-                    <td th:text="${e.category}"></td>
-                     <td th:text="${e.status}"></td>
-                     <td> <a th:href="@{${e.status=='Available'}?'/Admin/issue_search':'/Admin/issue_details'(id=${e.bid})}"><span th:text="${e.status=='Available'?'issue':'Details'}"></span></a> </td>
-                     <td> <a th:href="@{/Admin/update(id=${e.bid})}">update</a> </td>
+                    <td th:text="${e.sid}"></td>
+                    <td th:text="${e.sname}"></td>
+                    <td th:text="${e.issue_date}"></td>
+                    
                      <td> <a th:href="@{/Admin/delete(id=${e.bid})}">delete</a> </td>
                   </tr>
                  

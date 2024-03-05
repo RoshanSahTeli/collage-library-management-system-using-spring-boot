@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Books;
 
 public interface bookRepository extends JpaRepository<Books, String> {
@@ -27,11 +28,6 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	public long countBook(@Param("name")String name,@Param("status")String status);
 	
 	public List<Books> findByBnameAndStatus(String bname,String status);
-	
-//	@Modifying
-//	@Query("update Books b set b.bname= :bname , b.faculty= :faculty where b.bid= :bid")
-//	 void update_save(@Param("bid")String id,@Param("bname")String bname,@Param("faculty")String faculty);
-	
 	@Query("select i from Books i where i.bid= :bid or i.bname= :bname and i.status= :status")
 	public List<Books>findByIdOrName(@Param("bid")String bid,@Param("bname")String bname,
 			@Param("status")String status);
@@ -43,4 +39,8 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	//@Query("select s from Books s where s.category= :cat")
 	List<Books> findByCategory(String category);
 	
+	@Query("SELECT new com.example.demo.entity.BookCountDTO(b.bname, COUNT(b)) FROM Books b WHERE b.category = :category GROUP BY b.bname")
+	List<BookCountDTO> countBooksByName(@Param("category") String category);
+	
+	public List<Books> findByBname(String name);
 }
