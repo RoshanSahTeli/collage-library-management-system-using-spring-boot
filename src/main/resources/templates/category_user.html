@@ -1,4 +1,4 @@
-<html th:replace="basee::layout(~{::section})">
+<html th:replace="userBase::layout(~{::section})">
 	<head>
 		
 	</head>
@@ -25,7 +25,7 @@
                   <tr>
                     <th>Book Name</th>
                    
-                    <th>Count</th>
+                    <th>Available Count</th>
                     <th>Details</th>
                   </tr>
                 </thead>
@@ -39,7 +39,7 @@
                    
                     <td th:text="${e.book_count}"></td>
                 	
-                     <td> <a class="btn btn-primary btn-sm" th:href="@{/Admin/details(name=${e.book_name})}">Details</a> </td>
+                     <td> <a class="btn btn-primary btn-sm" th:href="@{/User/details(name=${e.book_name})}">Details</a> </td>
                      
                   </tr>
                  

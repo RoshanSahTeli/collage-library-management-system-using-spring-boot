@@ -211,7 +211,8 @@
   <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
+	
+	
       <li class="nav-item">
         <a class="nav-link " href="index.html">
           <i class="bi bi-grid"></i>
@@ -219,6 +220,13 @@
         </a>
       </li>
       <li class="nav-item">
+        <a class="nav-link collapsed" th:href="@{/User/MyBookings}">
+          <i class="bi bi-envelope"></i>
+          <span>My Bookings</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+
+     <!-- <li class="nav-item">
             <a class="nav-link" th:href="@{/Admin/category}">
               <i class="bi bi-list"></i><span>Category</span>
             </a>
@@ -230,7 +238,7 @@
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li th:each="c:${categories}">
-            <a th:href="@{'/Admin/category/'+${c.id}}">
+            <a th:href="@{'/User/category/'+${c.id}}">
               <i class="bi bi-arrow-right"></i><span th:text="${c.name}"></span>
             </a>
           </li>
@@ -263,11 +271,11 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a th:href="@{/Admin/findAll}">
+            <a th:href="@{/User/findAll}">
               <i class="bi bi-book"></i><span>Book List</span>
             </a>
           </li>
-          <li>
+        <!--  <li>
             <a th:href="@{/Admin/add_book_form}">
               <i class="bi bi-plus-lg"></i><span>Add Book</span>
             </a>
@@ -285,7 +293,7 @@
         </ul>
       </li><!-- End Forms Nav -->
 
-      <li class="nav-item">
+     <!-- <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-person"></i><span>Student</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -304,7 +312,7 @@
       </li><!-- End Tables Nav -->
 
     
-      <li class="nav-item">
+      <!--<li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-person-workspace"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -323,20 +331,13 @@
         </ul>
       </li><!-- End Icons Nav -->
 
-      <li class="nav-heading">Pages</li>
+      <!--<li class="nav-heading">Pages</li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" th:href="@{/Admin/show_requests}">
           <i class="bi bi-people"></i>
           <span>Request</span>&nbsp;
            <span class="badge bg-secondary badge-number" th:text="${count}"></span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" th:href="@{/Admin/bookings}">
-          <i class="bi bi-people"></i>
-          <span>Bookings</span>&nbsp;
-           <span class="badge bg-secondary badge-number" th:text="${countBooking}"></span>
         </a>
       </li><!-- End Profile Page Nav -->
 		
@@ -360,13 +361,7 @@
         </a>
       </li><!-- End Login Page Nav -->
 
-      <!--<li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
+      
       
 
 

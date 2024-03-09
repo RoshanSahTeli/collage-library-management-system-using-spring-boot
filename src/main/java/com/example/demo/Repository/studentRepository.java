@@ -25,5 +25,14 @@ public interface studentRepository extends JpaRepository<student, Integer> {
 //	public void findStatusAnd 
 	
 	public List<student> findByRoleAndStatus(String role,String status);
+	
+	public student findBySidAndStatus(int id,String status);
+	
+	
+	
+	@Modifying
+	@Query("update student s set s.username= :username,s.address= :address, s.email= :email , s.phone= :phone where s.sid= :sid")
+	public void updateStu(@Param("username")String username,@Param("address")String address,
+			@Param("email")String email,@Param("phone")String phone,@Param("sid")int sid);
 
 }

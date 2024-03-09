@@ -43,4 +43,14 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	List<BookCountDTO> countBooksByName(@Param("category") String category);
 	
 	public List<Books> findByBname(String name);
+	
+	@Query("SELECT new com.example.demo.entity.BookCountDTO(b.bname, COUNT(b)) " +
+	           "FROM Books b " +
+	           "WHERE b.category = :category AND b.status = 'Available' " +
+	           "GROUP BY b.bname")
+	List<BookCountDTO> findAvailableBooksByNameAndCategory(@Param("category") String category);
+	
+	
+	List<Books> findByStatus(String status);
+	
 }

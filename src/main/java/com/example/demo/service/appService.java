@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,15 +9,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.Repository.BookingRepo;
+import com.example.demo.Repository.CategoryRepo;
 import com.example.demo.Repository.bookRepository;
 import com.example.demo.Repository.issueRepo;
 import com.example.demo.Repository.studentRepository;
 import com.example.demo.entity.BookCountDTO;
+import com.example.demo.entity.Booking;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.category;
 import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 @Component
@@ -34,7 +36,11 @@ public class appService {
 	
 	@Autowired
 	private issueRepo irepo;
+	@Autowired
+	private CategoryRepo crepo;
 	
+	@Autowired
+	private BookingRepo borepo;
 	
 	
 	public void add_book(String name,String author,String publication,String Category) {
@@ -107,8 +113,8 @@ public class appService {
 		return l;
 	}
 	
-	public Optional<student> check_student(int sid){
-		Optional<student> s=srepo.findById(sid);
+	public student check_student(int sid,String status){
+		student s=srepo.findBySidAndStatus(sid, status);
 		return s;
 	}
 	
@@ -240,14 +246,19 @@ public class appService {
 		return brepo.findByCategory(category);
 	}
 	
+	
+	public category findCategoryById(int id) {
+		return crepo.findById(id).get();
+	}
+	
 	public List<BookCountDTO> list(String category){
 		
 		List<BookCountDTO> ll=brepo.countBooksByName(category);
+		
 		return ll;
-		
-		
-		
 	}
+	
+	
 	
 	public List<Books> findByName(String name){
 		return brepo.findByBname(name);
@@ -255,4 +266,53 @@ public class appService {
 	public com.example.demo.entity.issue issue_details(String bid) {
 		return irepo.findById(bid).get();
 	}
+	public List<category> categoryAll(){
+		return crepo.findAll();
+	
+	}
+	public void add_category(String cname) {
+		category c=new category();
+		c.setName(cname);
+		crepo.save(c);
+	}
+	
+	public category update_form(int cid) {
+		return crepo.findById(cid).get();
+	}
+	public void category_update_save(int cid,String name) {
+		category c=new category();
+		c.setId(cid);
+		c.setName(name);
+		crepo.save(c);
+	}
+	public void category_delete(int cid) {
+		crepo.deleteById(cid);
+	}
+	public List<category> category_dropdown(){
+		return crepo.findAll();
+	}
+	public List<category> get_categories(){
+		return crepo.findAll();
+	}
+	
+	@Transactional
+	public void admin_update_save(int sid,String username,String address,String email,String phone) {
+	srepo.updateStu(username, address, email, phone, sid);
+		
+		
+	}
+	
+	public void delete_student(int sid) {
+		srepo.deleteById(sid);
+	}
+	
+	public List<Booking> bookings(){
+		
+		return borepo.findAll();
+	}
+	
+	public long countBooking() {
+		return borepo.count();
+	}
+
 }

@@ -1,0 +1,73 @@
+<html th:replace="basee::layout(~{::section})">
+	<head>
+		
+	</head>
+	<body>
+		<section>
+			
+			<main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Categories</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+            
+            
+				<form th:action="@{/Admin/add_category}" method="post">
+				
+                <div class="row mb-1 mt-3">
+                  <label for="inputText" class="col-sm-2 col-form-label">Category Name</label>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control" name="cname">
+                  </div>
+               </div>
+                <div class="row mb-3">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+
+              </form>
+
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>
+                    	Category ID
+                    </th>
+                    <th>Category Name</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                 
+                  <tr th:each="e:${clist}">
+                    <td th:text="${e.cid}"></td>
+                    <td th:text="${e.name}"></td>
+                     <td> <a class="btn btn-primary btn-sm" th:href="@{/Admin/update_category(id=${e.cid})}">update</a> </td>
+                     <td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/delete_category(id=${e.cid})}">delete</a> </td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+		</section>
+		
+	</body>
+</html>

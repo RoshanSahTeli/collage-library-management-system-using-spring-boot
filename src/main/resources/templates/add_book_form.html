@@ -48,7 +48,11 @@
                 <div class="row mb-3">
                   <label for="inputNumber" class="col-sm-2 col-form-label">Category</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="category" th:value="*{category}">
+                    <select name="category" >
+						<option th:each="items:${category}" th:value="${items.name}" th:text="${items.name}"></option>
+						
+						
+					</select>
                   </div>
                 </div>
   

@@ -46,8 +46,8 @@
                     <td th:text="${s.phone}"></td>
                     <td th:text="${s.role}"></td>
                      <td th:text="${s.status}"></td>
-                     <td> <a th:href="@{/Admin/update(id=${s.sid})}">update</a> </td>
-                     <td> <a th:href="@{/Admin/delete(id=${s.sid})}">delete</a> </td>
+                     <td> <a class="btn btn-primary btn-sm" th:href="@{/Admin/update_admin(id=${s.sid})}">update</a> </td>
+                     <td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/student_delete(id=${s.sid})}">delete</a> </td>
                   </tr>
                  
                 </tbody>

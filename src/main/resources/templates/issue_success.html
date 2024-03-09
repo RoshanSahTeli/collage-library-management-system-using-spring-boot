@@ -1,12 +1,35 @@
 <!doctype html>
-<html lang="en" th:replace="base::layout(~{::section})">
+<html lang="en" th:replace="basee::layout(~{::section})">
 <head>
 	<meta charset="UTF-8" />
 	<title>Document</title>
 </head>
 <body>
-	<section style="display: flex; justify-content: center;text-align: center; height: 350px;">
-	<h2>Issue Success</h2>
-	</section>
+	<section>
+		<main id="main" class="main">
+
+    
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-1"></i>
+					Book successfully Issued!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+    </section>
 </body>
 </html>

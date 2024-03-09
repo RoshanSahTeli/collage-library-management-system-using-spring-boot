@@ -1,7 +1,5 @@
-<html th:replace="basee::layout(~{::section})">
-	<head>
-		
-	</head>
+<html  th:replace="userBase::layout(~{::section})">
+	<head></head>
 	<body>
 		<section>
 			<main id="main" class="main">
@@ -23,23 +21,29 @@
               <table class="table datatable">
                 <thead>
                   <tr>
+                    <th>
+                    	Book ID
+                    </th>
                     <th>Book Name</th>
-                   
-                    <th>Count</th>
-                    <th>Details</th>
+                    <th>Author</th>
+                    <th>Publication</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Book</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
                  
-                  <tr  th:each="e:${groupby}">
-                   
-                    <td th:text="${e.book_name}"></td>
-                  
-                  
-                   
-                    <td th:text="${e.book_count}"></td>
-                	
-                     <td> <a class="btn btn-primary btn-sm" th:href="@{/Admin/details(name=${e.book_name})}">Details</a> </td>
+                  <tr  th:each="e:${blist}">
+                    <td th:text="${e.bid}"></td>
+                    <td th:text="${e.bname}"></td>
+                    <td th:text="${e.author}"></td>
+                    <td th:text="${e.publication}"></td>
+                    <td th:text="${e.category}"></td>
+                     <td th:text="${e.status}"></td>
+                     
+                     <td><a class="btn btn-info btn-sm" th:href="@{/User/booked(id=${e.bid})}">Book</a> </td>
                      
                   </tr>
                  

@@ -1,13 +1,11 @@
 <html th:replace="basee::layout(~{::section})">
-	<head>
-		
-	</head>
+	<head></head>
 	<body>
 		<section>
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1>Books</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -23,23 +21,26 @@
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>Book Name</th>
-                   
-                    <th>Count</th>
-                    <th>Details</th>
+                    <th>
+                    	Booking ID
+                    </th>
+                    <th>Book ID</th>
+                    <th>Username</th>
+                    <th>User ID</th>
+                    <th>Date</th>
+                   <th>Cancel</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
                  
-                  <tr  th:each="e:${groupby}">
-                   
-                    <td th:text="${e.book_name}"></td>
-                  
-                  
-                   
-                    <td th:text="${e.book_count}"></td>
-                	
-                     <td> <a class="btn btn-primary btn-sm" th:href="@{/Admin/details(name=${e.book_name})}">Details</a> </td>
+                  <tr  th:each="e:${blist}">
+                    <td th:text="${e.booking_id}"></td>
+                    <td th:text="${e.bid}"></td>
+                    <td th:text="${e.username}"></td>
+                    <td th:text="${e.user_id}"></td>
+                    <td th:text="${e.date}"></td>
+                     <td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/cancelBoooking(id=${e.booking_id})}">Cancel</a> </td>
                      
                   </tr>
                  
