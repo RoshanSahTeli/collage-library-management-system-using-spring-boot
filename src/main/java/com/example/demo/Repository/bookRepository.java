@@ -32,6 +32,8 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	public List<Books>findByIdOrName(@Param("bid")String bid,@Param("bname")String bname,
 			@Param("status")String status);
 	
+	public List<Books> findByBidOrBname(String bid,String bname);
+	
 	public Books findFirstByBnameOrderByDateDesc(String name);
 
 

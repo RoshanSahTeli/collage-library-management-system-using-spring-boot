@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 import com.example.demo.service.appService;
 import com.example.demo.service.userService;
@@ -41,14 +42,26 @@ public class userController {
 		student s=service.findByEmail(principal.getName());
 		String status=s.getStatus();
 		if(status.equals("Verified")) {
+			session.setAttribute("sid", s.getSid());
+			session.setAttribute("username", s.getUsername());
 			List<com.example.demo.entity.category> category_list=aservice.get_categories();
+			List<issue> ilist=service.findIssued((int) session.getAttribute("sid"));
+			model.addAttribute("isss", ilist);
+			List<Booking> b=service.bookings((String) session.getAttribute("username"));
+			session.setAttribute("bcount", b.size());
+			model.addAttribute("bcount", b.size());
+			session.setAttribute("icount", ilist.size());
+			model.addAttribute("icount", ilist.size());
 			session.setAttribute("categories", category_list);
 			model.addAttribute("categories", category_list);
 			model.addAttribute("username",s.getUsername());
 			model.addAttribute("email", s.getEmail());
-			session.setAttribute("username", s.getUsername());
+			List<Books>list=service.findAllUser("Available");
+			model.addAttribute("all", list.size());
 			session.setAttribute("email", s.getEmail());
-			return "profile";
+			model.addAttribute("cate", service.findlastadded());
+			
+			return "userHome";
 		}
 		else {
 			return "unverified";
@@ -62,6 +75,8 @@ public class userController {
 			model.addAttribute("categories", session.getAttribute("categories"));
 			model.addAttribute("username", session.getAttribute("username"));
 			model.addAttribute("email",session.getAttribute("email") );
+			model.addAttribute("bcount", (int)session.getAttribute("bcount"));
+			model.addAttribute("icount", (int)session.getAttribute("icount"));
 		List<BookCountDTO>bcd=service.countBynameandStatus(categories.getName());
 		
 		model.addAttribute("groupby", bcd);
@@ -72,6 +87,8 @@ public class userController {
 			model.addAttribute("categories",session.getAttribute("categories"));
 			model.addAttribute("username", session.getAttribute("username"));
 			model.addAttribute("email",session.getAttribute("email") );
+			model.addAttribute("bcount",(int) session.getAttribute("bcount"));
+			model.addAttribute("icount",(int) session.getAttribute("icount"));
 		 List<Books>list=service.findByNameAndStatus(bname, "Available");
 		 
 		 model.addAttribute("blist", list);
@@ -121,9 +138,12 @@ public class userController {
 		model.addAttribute("categories",session.getAttribute("categories"));
 		model.addAttribute("username", session.getAttribute("username"));
 		model.addAttribute("email",session.getAttribute("email") );
+		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
+		model.addAttribute("icount", (int)session.getAttribute("icount"));
 		String username=(String) session.getAttribute("username");
 		student s=aservice.findAdmin((String) session.getAttribute("email"));
-		service.booked(bid, username, LocalDate.now(),s.getSid());
+		Books b=aservice.find(bid);
+		service.booked(bid, username,b.getBname(), LocalDate.now(),s.getSid());
 		aservice.setStatus(bid, "Booked");
 		
 		response.sendRedirect("/User/MyBookings");
@@ -135,7 +155,9 @@ public class userController {
 		model.addAttribute("username", session.getAttribute("username"));
 		model.addAttribute("email",session.getAttribute("email") );
 		List<Booking> b=service.bookings((String) session.getAttribute("username"));
+		model.addAttribute("icount", (int)session.getAttribute("icount"));
 		model.addAttribute("bookings", b);
+		model.addAttribute("bcount", b.size());
 		return "myBooking";
 	}
 	
@@ -148,6 +170,8 @@ public class userController {
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("username", session.getAttribute("username"));
 		model.addAttribute("email",session.getAttribute("email") );
+		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
+		model.addAttribute("icount",(int) session.getAttribute("icount"));
 		response.sendRedirect("/User/MyBookings");
 		
 	}
@@ -158,8 +182,34 @@ public class userController {
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("username", session.getAttribute("username"));
 		model.addAttribute("email",session.getAttribute("email") );
+		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
+		model.addAttribute("icount", (int)session.getAttribute("icount"));
 		return "allAvailable";
 	}
-
+	@GetMapping("/issued")
+	 public String issued(Model model,HttpSession session) {
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("username", session.getAttribute("username"));
+		model.addAttribute("email",session.getAttribute("email") );
+		List<issue> ilist=service.findIssued((int) session.getAttribute("sid"));
+		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
+		model.addAttribute("icount", ilist.size());
+		model.addAttribute("issued", ilist);
+		 return "issued";
+	 }
+	@GetMapping("/search")
+	public String search(@RequestParam("search")String id,@RequestParam("search")String name,   Model model,HttpSession session) {
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("username", session.getAttribute("username"));
+		model.addAttribute("email",session.getAttribute("email") );
+		 model.addAttribute("countBooking", aservice.countBooking());
+		 List<Books> blist=aservice.searchAvailableBook(id, name, "Available");
+		 model.addAttribute("blist", blist);
+		 model.addAttribute("bcount",(int) session.getAttribute("bcount"));
+		model.addAttribute("icount", (int)session.getAttribute("icount"));
+		return "searchByUser";
+	}
 
 }

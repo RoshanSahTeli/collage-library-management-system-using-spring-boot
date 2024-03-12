@@ -1,4 +1,4 @@
-<html th:replace="basee::layout(~{::section})">
+<html th:replace="basee::layout(~{::section})" >
 	<head>
 		
 	</head>
@@ -52,13 +52,13 @@
                     <input type="text" class="form-control" name="sname">
                   </div>
                 </div>
-                <!--<div class="row mb-3">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Publication</label>
+                <div class="row mb-3">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Days</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="publication" th:value="*{publication}">
+                    <input type="number" class="form-control" name="days">
                   </div>
                 </div>
-                <div class="row mb-3">
+               <!-- <div class="row mb-3">
                   <label for="inputNumber" class="col-sm-2 col-form-label">Category</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="category" th:value="*{category}">

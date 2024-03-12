@@ -52,6 +52,25 @@
                  
                 </tbody>
               </table>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}" > 
+                  <li class="page-item"><a class="page-link" th:href="@{'/Admin/findAll/' + ${i}}">[[${i}]]</a></li>
+                  <!--<li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>--></span>
+                </ul>
+              </nav>
+               <!--<footer style="font-size: large" class="panel-footer">
+    Total Items [[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+    &nbsp; &nbsp; - &nbsp;
+    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{'/Admin/findAll/' + ${i}}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>-->
+    </div>
               <!-- End Table with stripped rows -->
 
             </div>

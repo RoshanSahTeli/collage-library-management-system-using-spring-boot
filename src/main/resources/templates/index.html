@@ -3,6 +3,350 @@
 	<body>
 		<section>
 			
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/Admin/home}">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->	
+
+                <div class="card-body">
+                  <h5 class="card-title">Listed Categories</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-book"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>count: <span th:text="${category_count}"></span></h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->
+
+                <div class="card-body">
+                  <h5 class="card-title">Available Books</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-book"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>count: <span  th:text="${av}"></span></h6>
+                      
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card customers-card">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->
+
+                <div class="card-body">
+                  <h5 class="card-title">Issued Books</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-book"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>count: <span th:text="${is}"></span></h6>
+                      
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            
+
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->
+
+                <div class="card-body">
+                  <h2 class="card-title">Requests</h2>
+
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+					<th>Username</td>
+					<th>Email</td>
+					<th>Address</td>
+					<th>Phone</th>
+					
+					
+					<th>Verfiy</th>
+					<th>Reject</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="l:${list}">
+					<td th:text="${l.sid}"></td>
+					<td th:text="${l.username}"></td>
+					<td th:text="${l.email}"></td>
+					<td th:text="${l.address}"></td>
+					<td th:text="${l.phone}"></td>
+					
+					
+					<td><a class="btn btn-success btn-sm" th:href="@{/Admin/verify(id=${l.sid})}">Verify</a> </td>
+					
+					<td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/reject(id=${l.sid})}">Reject</a>  </td>
+				</tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+			
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->
+
+                <div class="card-body">
+                  <h2 class="card-title">Bookings</h2>
+
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Booking ID</th>
+                        <th scope="col">Book ID</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">Date</th>
+                         <th scope="col">Cancel</th>
+                          <th scope="col">Issue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr  th:each="e:${blist}">
+                    <td th:text="${e.booking_id}"></td>
+                    <td th:text="${e.bid}"></td>
+                    <td th:text="${e.username}"></td>
+                    <td th:text="${e.user_id}"></td>
+                    <td th:text="${e.date}"></td>
+                    <td> <a class="btn btn-primary btn-sm"th:href="@{/Admin/issueBooking(id=${e.booking_id})}">Issue</a> </td>
+                     <td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/cancelBooking(id=${e.booking_id})}">Cancel</a> </td>
+                     
+                     
+                  </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+            
+          
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+          <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->
+
+                <div class="card-body">
+                  <h2 class="card-title">Users
+					   <span class="badge bg-secondary badge-number" th:text="${scount}" style="color: white;"></span>
+				  </h2>
+					
+                  <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        
+                        <td style="font-weight: bold;">User ID</td>
+                        <td style="font-weight: bold;">Username</td>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr  th:each="e:${stu}">
+                    <td  th:text="${e.sid}"></td>
+                    <td th:text="${e.username}"></td>
+                    
+                     
+                  </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+			
+			          <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <!--<div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>-->
+
+                <div class="card-body">
+                  <h2 class="card-title">Admin
+					  <span class="badge bg-secondary badge-number" th:text="${acount}" style="color: white;"></span>
+				  </h2>
+
+                  <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        
+                        <td style="font-weight: bold;">Admin ID</td>
+                        <td style="font-weight: bold;">Username</td>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr  th:each="e:${adm}">
+                    <td  th:text="${e.sid}"></td>
+                    <td th:text="${e.username}"></td>
+                    
+                     
+                  </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+
+          
+
+          
+
+          
+
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
 		</section>
 	</body>
 </html>

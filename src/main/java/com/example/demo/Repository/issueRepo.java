@@ -12,5 +12,8 @@ public interface issueRepo extends JpaRepository<issue, String> {
 	
 	@Query("select i from issue i where i.bid= :bid")
 	public List<issue> findByIdOrName(@Param("bid")String bid);
+	
+	@Query("select i from issue i where i.sid= :sid")
+	public List<issue> findIssued(@Param("sid")int sid);
 
 }

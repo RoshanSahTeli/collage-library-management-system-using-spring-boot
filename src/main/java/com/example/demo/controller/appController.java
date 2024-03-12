@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -61,6 +63,7 @@ private homeService hservice;
 		List<com.example.demo.entity.category> category_list=service.get_categories();
 		session.setAttribute("categories", category_list);
 		model.addAttribute("categories", category_list);
+		model.addAttribute("category_count", category_list.size());
 		 session.setAttribute("request", list);
 		 model.addAttribute("countBooking", service.countBooking());
 		 int count=list.size();
@@ -68,12 +71,21 @@ private homeService hservice;
 		 model.addAttribute("count", count);
 		 session.setAttribute("count", count);
 		 student s=hservice.userStatus(principal.getName());
-		 
+		 model.addAttribute("av", service.findBooksByStatus("Available").size());
+		 model.addAttribute("is", service.findBooksByStatus("issued").size());
 		 model.addAttribute("email", principal.getName());
 		 student ss=service.findAdmin(principal.getName());
 		 model.addAttribute("username",ss.getUsername());
 		 session.setAttribute("username", ss.getUsername());
 		 session.setAttribute("email", ss.getEmail());
+		 session.setAttribute("sid", ss.getSid());
+		 List<Booking> blist=service.bookings();
+		 model.addAttribute("blist", blist);
+		 model.addAttribute("stu", service.findbyRole("USER"));
+		 model.addAttribute("scount", service.findbyRole("USER").size());
+		 model.addAttribute("acount", service.findbyRole("ADMIN").size());
+		 model.addAttribute("adm", service.findbyRole("ADMIN"));
+		 
 		 String status=s.getStatus();
 		 if(status.equals("Verified")) {	
 			return "index";
@@ -85,13 +97,19 @@ private homeService hservice;
 		
 	}
 	
-	@GetMapping("/findAll")
-		public String findAll(Model model,HttpSession session) {
-			List<Books>list=service.findAllBooks();
+	@GetMapping("/findAll/{page}")
+		public String findAll(Model model,HttpSession session,@PathVariable("page")int page) {
+			Page<Books>pages=service.findPage(page);
+			List<Books>allBooks= pages.getContent();
+			int totalPage=pages.getTotalPages();
+			long totalItems=pages.getTotalElements();
+			  model.addAttribute("currentPage", page);
+			    model.addAttribute("totalPages", totalPage);
+			    model.addAttribute("totalItems", totalItems);
 			 model.addAttribute("countBooking", service.countBooking());
 			model.addAttribute("list", session.getAttribute("request"));
 			model.addAttribute("count", session.getAttribute("count"));
-			model.addAttribute("all", list);
+			model.addAttribute("all",allBooks);
 			model.addAttribute("categories", session.getAttribute("categories"));
 			model.addAttribute("username", session.getAttribute("username"));
 			model.addAttribute("email",session.getAttribute("email") );
@@ -112,7 +130,8 @@ private homeService hservice;
 	
 	@PostMapping("/issue")
 	public String issue(@RequestParam("bid") String bid,@RequestParam("bname")String bname,
-			@RequestParam("sid") int sid,@RequestParam("sname")String sname,Model  model
+			@RequestParam("sid") int sid,@RequestParam("sname")String sname,
+			@RequestParam("days")int days ,Model  model
 			,HttpSession session) {
 		
 		List<Books> l=service.check_book(bid,"Available");
@@ -135,7 +154,7 @@ private homeService hservice;
 			return "not_available";
 		}
 		else {
-		service.issue(bid, sid, sname,bname);
+		service.issue(bid, sid, sname,bname,days);
 		service.setStatus(bid,"issued");
 		return "issue_success";
 		
@@ -190,12 +209,20 @@ private homeService hservice;
 //	}
 //	
 	@GetMapping("/search")
-	public String search(@RequestParam("search")String id,@RequestParam("search")String name,   Model model) {
+	public String search(@RequestParam("search")String id,@RequestParam("search")String name,   Model model,HttpSession session) {
 		
-		List<com.example.demo.entity.issue> ilist=service.searchIssuedBook(id);
-		List<Books>blist=service.searchAvailableBook(id,name,"Available");
-		model.addAttribute("ilist", ilist);
-		model.addAttribute("alist", blist);
+		//List<com.example.demo.entity.issue> ilist=service.searchIssuedBook(id);
+		//List<Books>blist=service.searchAvailableBook(id,name,"Available");
+		//model.addAttribute("ilist", ilist);
+		//model.addAttribute("alist", blist);
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("username", session.getAttribute("username"));
+		model.addAttribute("email",session.getAttribute("email") );
+		 model.addAttribute("countBooking", service.countBooking());
+		 List<Books> blist=service.findByIdOrName(id, name);
+		 model.addAttribute("blist", blist);
 		
 		return "search_issued";
 			
@@ -400,7 +427,9 @@ private homeService hservice;
 			model.addAttribute("email",session.getAttribute("email") );
 			 model.addAttribute("countBooking", service.countBooking());
 		 List<Books>list=service.findByName(bname);
-		 
+		// com.example.demo.entity.issue i=service.issue_details(bid);
+		 model.addAttribute("issue_details", session.getAttribute("mo"));
+		 model.addAttribute("h", "hello");
 		 model.addAttribute("blist", list);
 		 return "book_details";
 		 
@@ -459,7 +488,8 @@ private homeService hservice;
 //	 }
 //	 
 	 @GetMapping("/issue_details")
-	 public String issue_details(@RequestParam("id")String bid,Model model,HttpSession session) {
+	 public String issue_details(@RequestParam("id") String bid,Model model,HttpSession session) {
+		 System.out.println("hello");
 		 model.addAttribute("list", session.getAttribute("request"));
 		 model.addAttribute("count", session.getAttribute("count"));
 		 model.addAttribute("categories", session.getAttribute("categories"));
@@ -467,7 +497,9 @@ private homeService hservice;
 			model.addAttribute("email",session.getAttribute("email") );
 			 model.addAttribute("countBooking", service.countBooking());
 		 com.example.demo.entity.issue i=service.issue_details(bid);
+		 session.setAttribute("mo", i);
 		 model.addAttribute("issue_details", i);
+		 model.addAttribute("h", "hello");
 		 return "issue_details";
 	 }
 	 @GetMapping("/category")
@@ -483,9 +515,13 @@ private homeService hservice;
 		 return "category";
 	 }
 	 @PostMapping("/add_category")
-	 public void add_book(@RequestParam("cname")String cname,HttpServletResponse response)
+	 public void add_book(@RequestParam("cname")String cname,HttpServletResponse response
+			 ,HttpSession session,Model model)
 			 throws IOException {
 		 service.add_category(cname);
+		 List<com.example.demo.entity.category> category_list=service.get_categories();
+			session.setAttribute("categories", category_list);
+		// model.addAttribute("categories", session.getAttribute("categories"));
 		 response.sendRedirect("/Admin/category");
 	 }
 	 
@@ -499,6 +535,7 @@ private homeService hservice;
 			 model.addAttribute("countBooking", service.countBooking());
 		 com.example.demo.entity.category c=service.update_form(cid);
 		 model.addAttribute("update_category", c);
+		 
 		 return "update_category_form";
 	 }
 	 @PostMapping("/update_category_save")
@@ -511,6 +548,8 @@ private homeService hservice;
 			model.addAttribute("username", session.getAttribute("username"));
 			model.addAttribute("email",session.getAttribute("email") );
 			 model.addAttribute("countBooking", service.countBooking());
+			 List<com.example.demo.entity.category> category_list=service.get_categories();
+				session.setAttribute("categories", category_list);
 		 response.sendRedirect("/Admin/category");
 	 }
 	 @GetMapping("/delete_category")
@@ -523,6 +562,8 @@ private homeService hservice;
 			model.addAttribute("username", session.getAttribute("username"));
 			model.addAttribute("email",session.getAttribute("email") );
 			 model.addAttribute("countBooking", service.countBooking());
+			 List<com.example.demo.entity.category> category_list=service.get_categories();
+				session.setAttribute("categories", category_list);	
 		 response.sendRedirect("/Admin/category");
 		 
 	 }
@@ -539,6 +580,54 @@ private homeService hservice;
 		 model.addAttribute("blist", blist);
 		 return "Bookings";
 	 }
+	 
+	 @GetMapping("/cancelBooking")
+	 public void cancel_Booking(@RequestParam("id")int booking_id,Model model,HttpSession session,HttpServletResponse response) throws IOException {
+		 model.addAttribute("list", session.getAttribute("request"));
+		 model.addAttribute("count", session.getAttribute("count"));
+		 model.addAttribute("categories", session.getAttribute("categories"));
+		 model.addAttribute("username", session.getAttribute("username"));
+		 model.addAttribute("email",session.getAttribute("email") );
+		 model.addAttribute("countBooking", service.countBooking());
+		 Booking b=service.findBooking(booking_id);
+		 service.cancel_booking(booking_id);
+		 service.setStatus(b.getBid(),"Available");
+		 System.out.println(b.getBid());
+		 response.sendRedirect("/Admin/bookings");
+	 }
+	 
+	 @GetMapping("/issueBooking")
+	 public void issue_Booking(@RequestParam("id") int Booking_id,  Model model,HttpSession session,HttpServletResponse response) throws IOException {
+		 model.addAttribute("list", session.getAttribute("request"));
+		 model.addAttribute("count", session.getAttribute("count"));
+		 model.addAttribute("categories", session.getAttribute("categories"));
+		 model.addAttribute("username", session.getAttribute("username"));
+		 model.addAttribute("email",session.getAttribute("email") );
+		 model.addAttribute("countBooking", service.countBooking());
+		 Booking b=service.findBooking(Booking_id);
+		
+		 service.setStatus(b.getBid(), "issued");
+		 service.cancel_booking(Booking_id);
+		 service.issue(b.getBid(), b.getUser_id(), b.getUsername(), b.getBname(),7);
+		 
+		 response.sendRedirect("/Admin/bookings");
+	 }
+	 
+	 @GetMapping("/bookingById")
+	 public String findBookingById(@RequestParam("id")String bid,Model model,HttpSession session) {
+		 Booking b=service.findByBid(bid);
+		 model.addAttribute("blist", b);
+		 return "Bookings";
+	 }
+	 
+	 @GetMapping("/book/{id}")
+	    public String showBookDetails(@PathVariable("id") String id, Model model) {
+	        com.example.demo.entity.issue book = service.getIssuedBookById(id); // Assuming you have a service to retrieve book details
+	        model.addAttribute("book", book);
+	        model.addAttribute("h", "hello");
+	        return "book_details"; // Thymeleaf template for book details
+	    }
+
 	 
 
 }

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +16,7 @@ import com.example.demo.Repository.BookingRepo;
 import com.example.demo.Repository.CategoryRepo;
 import com.example.demo.Repository.bookRepository;
 import com.example.demo.Repository.issueRepo;
+import com.example.demo.Repository.pageRepo;
 import com.example.demo.Repository.studentRepository;
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Booking;
@@ -41,6 +45,8 @@ public class appService {
 	
 	@Autowired
 	private BookingRepo borepo;
+	@Autowired
+	private pageRepo prepo;
 	
 	
 	public void add_book(String name,String author,String publication,String Category) {
@@ -69,7 +75,7 @@ public class appService {
 		brepo.save(b);
 	}
 	
-	public void issue(String bid,int sid,String sname,String bname) {
+	public void issue(String bid,int sid,String sname,String bname,int days) {
 		issue i=new issue();
 		
 		student ss=srepo.findById(sid).get();
@@ -101,8 +107,8 @@ public class appService {
 		i.setBname(bname);
 		i.setSid(sid);
 		i.setSname(sname);
-		
 		i.setIssue_date(LocalDateTime.now());
+		i.setExpiry_date(LocalDateTime.now().plusDays(days));
 		irepo.save(i);
 		
 		
@@ -147,6 +153,9 @@ public class appService {
 	public List<Books> searchAvailableBook(String bid,String name,String status){
 		List<Books>list=brepo.findByIdOrName(bid,name,status);
 		return list;
+	}
+	public List<Books> findByIdOrName(String bid,String bname){
+		return brepo.findByBidOrBname(bid, bname);
 	}
 	
 	public List<Books>findByNameAndStatus(String bname,String status){
@@ -224,6 +233,10 @@ public class appService {
 	}
 	public List<Books> findAllBooks() {
 		return brepo.findAll();
+	}
+	public Page<Books> findPage(int page){
+		Pageable pageable=PageRequest.of(page-1,5 );
+		return brepo.findAll(pageable);
 	}
 	public List<student> find_student(String role,String status){
 		return srepo.findByRoleAndStatus(role, status);
@@ -311,8 +324,27 @@ public class appService {
 		return borepo.findAll();
 	}
 	
+	public Booking findBooking(int id) {
+		return borepo.findById(id).get();	
+	}
+	
 	public long countBooking() {
 		return borepo.count();
+	}
+	public void cancel_booking(int id) {
+		borepo.deleteById(id);
+	}
+	public Booking findByBid(String bid) {
+		return borepo.findByBid(bid);
+	}
+	public issue getIssuedBookById(String bid) {
+		return irepo.findById(bid).get();
+	}
+	public List<Books>findBooksByStatus(String status){
+		return brepo.findByStatus(status);
+	}
+	public List<student>findbyRole(String role){
+		return srepo.findByRole(role);
 	}
 
 }

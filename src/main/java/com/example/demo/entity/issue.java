@@ -31,8 +31,20 @@ public class issue {
 	
 	private String sname;
 	
+	private LocalDateTime expiry_date;
 	
 	
+	
+	
+	
+	public LocalDateTime getExpiry_date() {
+		return expiry_date;
+	}
+
+	public void setExpiry_date(LocalDateTime expiry_date) {
+		this.expiry_date = expiry_date;
+	}
+
 	private LocalDateTime issue_date;
 
 	public String getBid() {
@@ -81,13 +93,13 @@ public class issue {
 				+ ", issue_date=" + issue_date + "]";
 	}
 
-	public issue(String bid, int sid, String sname, LocalDateTime issue_date,String bname) {
+	public issue(String bid, int sid, String sname, LocalDateTime issue_date,String bname,LocalDateTime expiry_date) {
 		super();
 		this.bid = bid;
 		this.bname=bname;
 		this.sid = sid;
 		this.sname = sname;
-		
+		this.expiry_date=expiry_date;
 		this.issue_date = issue_date;
 	}
 

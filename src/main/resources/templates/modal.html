@@ -1,0 +1,61 @@
+<html th:fragment="modal1">
+<body>
+	<th:block></th:block>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Dynamic Content</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display dynamic content here -->
+                <p th:text="${h}"></p>
+                 <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>
+                    	Book ID
+                    </th>
+                    <th>Book Name</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Issue Date</th>
+                   	<th>Expiry Date</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                 
+                  <tr  th:each="e:${issue_details}">
+                    <td th:text="${e.bid}"></td>
+                    <td th:text="${e.bname}"></td>
+                    <td th:text="${e.sid}"></td>
+                    <td th:text="${e.sname}"></td>
+                    <td th:text="${e.issue_date}"></td>
+                    <td th:text="${e.expiry_date}"></td>
+                     	<td> <a class="btn btn-danger btn-sm"data-bs-target="#verticalycentered" th:href="@{/Admin/delete(id=${e.bid})}">delete</a> </td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- Display book details including issue date -->
+       <!-- <div th:object="${e}">
+           
+            <p><strong>Author:</strong> <span th:text="${e.bname}"></span></p>
+            <p><strong>Issue Date:</strong> <span th:text="${#dates.format(book.issueDate, 'yyyy-MM-dd')}"></span></p>
+             Add more details here as needed 
+             <p><strong>Book ID from Data Attribute:</strong> <span id="bookId"></span></p>
+        </div>-->
+     
+	</body>
+</html>

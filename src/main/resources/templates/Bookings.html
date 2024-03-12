@@ -18,7 +18,7 @@
             
 
               <!-- Table with stripped rows -->
-              <table class="table datatable">
+              <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>
@@ -29,7 +29,7 @@
                     <th>User ID</th>
                     <th>Date</th>
                    <th>Cancel</th>
-                    
+                    <th>Issue</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -40,7 +40,8 @@
                     <td th:text="${e.username}"></td>
                     <td th:text="${e.user_id}"></td>
                     <td th:text="${e.date}"></td>
-                     <td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/cancelBoooking(id=${e.booking_id})}">Cancel</a> </td>
+                     <td> <a class="btn btn-danger btn-sm" th:href="@{/Admin/cancelBooking(id=${e.booking_id})}">Cancel</a> </td>
+                     <td> <a class="btn btn-primary btn-sm"th:href="@{/Admin/issueBooking(id=${e.booking_id})}">Issue</a> </td>
                      
                   </tr>
                  

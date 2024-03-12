@@ -7,11 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Repository.BookingRepo;
+import com.example.demo.Repository.CategoryRepo;
 import com.example.demo.Repository.bookRepository;
+import com.example.demo.Repository.issueRepo;
 import com.example.demo.Repository.studentRepository;
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.category;
+import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 
 @Component
@@ -24,6 +28,10 @@ public class userService {
 	
 	@Autowired
 	private BookingRepo borepo;
+	@Autowired
+	private issueRepo irepo;
+	@Autowired
+	private CategoryRepo crepo;
 	
 	public student findByEmail(String email) {
 		student s=srepo.findByEmail(email);
@@ -37,13 +45,14 @@ public class userService {
 		return brepo.findByBnameAndStatus(name, status);
 	}
 	
-	public Books booked(String bid,String username,LocalDate date,int uid) {
+	public Books booked(String bid,String username,String bname,LocalDate date,int uid) {
 		
 		Booking b=new Booking();
 		b.setBid(bid);
 		b.setUsername(username);
 		b.setDate(date);
 		b.setUser_id(uid);
+		b.setBname(bname);
 		borepo.save(b);
 		return  brepo.findById(bid).get();
 		
@@ -66,6 +75,13 @@ public class userService {
 	
 	public List<Books> findAllUser(String status){
 		return brepo.findByStatus(status);
+	}
+	
+	public List<issue> findIssued(int sid){
+		return irepo.findIssued(sid);
+	}
+	public List<category>findlastadded(){
+		return crepo.findFirst3ByOrderByNameDesc();
 	}
 	
 

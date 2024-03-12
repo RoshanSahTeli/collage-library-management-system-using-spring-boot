@@ -15,22 +15,13 @@ public class Booking {
 	private int booking_id;
 	
 	private String bid;
+	private String bname;
 	
 	private String username;
 	
 	private int user_id;
 	
 	private LocalDate date;
-
-		
-	
-	public int getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
-	}
 
 	public int getBooking_id() {
 		return booking_id;
@@ -48,12 +39,28 @@ public class Booking {
 		this.bid = bid;
 	}
 
+	public String getBname() {
+		return bname;
+	}
+
+	public void setBname(String bname) {
+		this.bname = bname;
+	}
+
 	public String getUsername() {
 		return username;
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public int getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
 	}
 
 	public LocalDate getDate() {
@@ -64,12 +71,11 @@ public class Booking {
 		this.date = date;
 	}
 
-	
-
-	public Booking(int booking_id, String bid, String username, int user_id, LocalDate date) {
+	public Booking(int booking_id, String bid, String bname, String username, int user_id, LocalDate date) {
 		super();
 		this.booking_id = booking_id;
 		this.bid = bid;
+		this.bname = bname;
 		this.username = username;
 		this.user_id = user_id;
 		this.date = date;
@@ -80,5 +86,8 @@ public class Booking {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	
 
 }
