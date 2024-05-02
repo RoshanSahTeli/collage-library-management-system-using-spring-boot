@@ -4,10 +4,15 @@ public class BookCountDTO {
 	
 	public String book_name;
 	
-	private long book_count;
+	private long available;
 	
-	public String status;
+	private long issued;
 	
+	private long booked;
+	
+	private String status;
+	
+
 	public String getStatus() {
 		return status;
 	}
@@ -24,33 +29,51 @@ public class BookCountDTO {
 		this.book_name = book_name;
 	}
 
-	public long getBook_count() {
-		return book_count;
+	public long getAvailable() {
+		return available;
 	}
 
-	public void setBook_count(long book_count) {
-		this.book_count = book_count;
+	public void setAvailable(long available) {
+		this.available = available;
 	}
 
-	
+	public long getIssued() {
+		return issued;
+	}
 
-	public BookCountDTO(String book_name,long book_count) {
+	public void setIssued(long issued) {
+		this.issued = issued;
+	}
+
+	public long getBooked() {
+		return booked;
+	}
+
+	public void setBooked(long booked) {
+		this.booked = booked;
+	}
+
+	public BookCountDTO(String book_name, long available, long issued, long booked) {
 		super();
 		this.book_name = book_name;
-		this.book_count = book_count;
+		this.available = available;
+		this.issued = issued;
+		this.booked = booked;
 		
+	}
+	
+	public BookCountDTO(String book_name,long count) {
+		super();
+		this.book_name=book_name;
+		this.available=count;
 	}
 
 	public BookCountDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public String toString() {
-		return "BookCountDTO [book_name=" + book_name + ", book_count=" + book_count + "]";
-	}
 	
 	
-
+	
+	
 }

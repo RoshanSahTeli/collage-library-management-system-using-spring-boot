@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Repository.BookingRepo;
 import com.example.demo.Repository.CategoryRepo;
@@ -235,14 +238,20 @@ public class appService {
 		return brepo.findAll();
 	}
 	public Page<Books> findPage(int page){
-		Pageable pageable=PageRequest.of(page-1,5 );
+		Pageable pageable=PageRequest.of(page,7 );
 		return brepo.findAll(pageable);
 	}
 	public List<student> find_student(String role,String status){
 		return srepo.findByRoleAndStatus(role, status);
 	}
-	public void stuSave(student stu,String role) {
+	public void stuSave(student stu,String role,MultipartFile file) throws IllegalStateException, IOException {
+		String FolderPath="D:\\myspring\\Library\\src\\main\\resources\\static\\images\\";
+		String path=FolderPath+file.getOriginalFilename();
+		String sc="images\\";
+		int i=path.indexOf(sc);
+		String name=path.substring(i+sc.length());
 		student s=new student();
+		file.transferTo(new File(path));
 		s.setEmail(stu.getEmail());
 		s.setSid(stu.getSid());
 		s.setPassword(new BCryptPasswordEncoder().encode(stu.getPassword()));
@@ -251,6 +260,7 @@ public class appService {
 		s.setAddress(stu.getAddress());
 		s.setStatus("Verified");
 		s.setRole(role);
+		s.setImg(name);
 		srepo.save(s);
 		
 	}
@@ -270,7 +280,9 @@ public class appService {
 		
 		return ll;
 	}
-	
+//	public List<BookCountDTO> lll(String category){
+//		return brepo.FindBooksByName(category);
+//	}
 	
 	
 	public List<Books> findByName(String name){
@@ -343,8 +355,8 @@ public class appService {
 	public List<Books>findBooksByStatus(String status){
 		return brepo.findByStatus(status);
 	}
-	public List<student>findbyRole(String role){
-		return srepo.findByRole(role);
+	public List<student>findbyRole(String role,String status){
+		return srepo.findByRoleAndStatus(role, status);
 	}
 
 }

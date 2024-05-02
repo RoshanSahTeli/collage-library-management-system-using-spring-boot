@@ -64,7 +64,7 @@
                
                   </div>
 
-                  <form class="row g-6 needs-validation" novalidate th:action="@{signup_save}" method="post">
+                  <form class="row g-6 needs-validation" novalidate th:action="@{signup_save}" method="post" th:object="${student}"	enctype="multipart/form-data">
                     <div class="col-12">
                       <label for="yourName" class="form-label">Your ID</label>
                       <input type="text" name="sid" class="form-control" id="yourName" required>
@@ -72,36 +72,42 @@
                     </div>
                     <div class="col-12">
                       <label for="yourName" class="form-label">Your Name</label>
-                      <input type="text" name="username" class="form-control" id="yourName" required>
-                      <div class="invalid-feedback">Please, enter your name!</div>
+                      <input type="text" name="username" class="form-control" id="yourName" required th:field="${student.username}">
+                      <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red;"></div><br>
                     </div>
 
                     	<div class="col-12">
                       <label for="yourEmail" class="form-label">Your Address</label>
-                      <input type="email" name="address" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter adddress!</div>
+                      <input type="text" name="address" class="form-control" id="yourEmail" required>
+                      <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" style="color: red;"></div>
                     </div>
 
                     <div class="col-12">
                       <label for="yourUsername" class="form-label">Email</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="text" name="email" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Please enter your email.</div>
+                        <input type="email" name="email" class="form-control" id="yourUsername" required><br>
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
                       </div>
                     </div>
                      
                      <div class="col-12">
                       <label for="yourEmail" class="form-label">Your Password</label>
                       <input type="password" name="password" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter a password!</div>
+                      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;"></div>
                     </div>
 
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Phone</label>
                       <input type="text" name="phone" class="form-control" id="yourPassword" required>
-                      <div class="invalid-feedback">Please enter your phone number!</div>
+                      <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: red;"></div>
                     </div>
+					<div class="row mb-3">
+					    <label for="inputNumber" class="form-label">Upload Your Picture</label>
+					     <div class="col-sm-10">
+					       <input class="form-control" type="file" id="formFile" name="image">
+					      </div>
+					 </div>
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Sign Up</button>

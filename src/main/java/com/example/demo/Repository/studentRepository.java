@@ -35,5 +35,5 @@ public interface studentRepository extends JpaRepository<student, Integer> {
 	public void updateStu(@Param("username")String username,@Param("address")String address,
 			@Param("email")String email,@Param("phone")String phone,@Param("sid")int sid);
 
-		List<student>findByRole(String role);
+		//List<student>findByRoleAndStatus(String role,String status);
 }

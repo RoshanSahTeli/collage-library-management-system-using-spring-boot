@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name ="student" )
@@ -15,22 +18,37 @@ public class student {
 	
 	@Id
 	//@GeneratedValue(strategy = GenerationType.AUTO)
+	//@NotBlank(message = "ID should not be blank!")
 	private int sid;
 	
-//	@NotBlank
-//	@Size(max = 10,min = 3)
+	@NotBlank(message = "Username should not be blank!")
+	
 	private String username;
 	
-//	@NotBlank
-	//@Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",message = "invalid email")
+	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$", message = "Invalid email format")
 	private String email;
-//	@NotBlank
-//	@Size(max = 10,min = 4)
+	@NotBlank
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must be at least 8 characters long, contain at least one digit, one lowercase letter, one uppercase letter, one special character, and no whitespace")
 	private String password;
+	
+	@NotBlank
+	@Size(max = 10,min = 10,message = "Length should be of exactly 10 digits")
 	private String phone;
+	@NotBlank
 	private String address;
 	private String role;
 	private String status;
+	
+	private String img;
+	
+	
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
+	}
 	@OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
 	public List<Books>bookList=new ArrayList<>();
 	public int getSid() {
@@ -88,7 +106,7 @@ public class student {
 		this.bookList = bookList;
 	}
 	public student(int sid, String username, String email, String password, String phone, String address, String role,
-			String status, List<Books> bookList) {
+			String status,String img, List<Books> bookList) {
 		super();
 		this.sid = sid;
 		this.username = username;
@@ -99,6 +117,7 @@ public class student {
 		this.role = role;
 		this.status = status;
 		this.bookList = bookList;
+		this.img=img;
 	}
 	public student() {
 		super();

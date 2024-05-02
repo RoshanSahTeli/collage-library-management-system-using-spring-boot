@@ -41,7 +41,12 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	//@Query("select s from Books s where s.category= :cat")
 	List<Books> findByCategory(String category);
 	
-	@Query("SELECT new com.example.demo.entity.BookCountDTO(b.bname, COUNT(b)) FROM Books b WHERE b.category = :category GROUP BY b.bname")
+	@Query("SELECT new com.example.demo.entity.BookCountDTO(b.bname, " +
+			"COUNT(b) FILTER (WHERE b.status = 'Available'), " +
+		       "COUNT(b) FILTER (WHERE b.status = 'issued'), " +
+		       "COUNT(b) FILTER (WHERE b.status = 'booked')) " +
+		       "FROM Books b WHERE b.category = :category GROUP BY b.bname")
+
 	List<BookCountDTO> countBooksByName(@Param("category") String category);
 	
 	public List<Books> findByBname(String name);

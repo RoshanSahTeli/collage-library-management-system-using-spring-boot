@@ -20,7 +20,7 @@
             
 
               <!-- Table with stripped rows -->
-              <table class="table datatable">
+              <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>Book Name</th>
@@ -34,10 +34,7 @@
                   <tr  th:each="e:${groupby}">
                    
                     <td th:text="${e.book_name}"></td>
-                  
-                  
-                   
-                    <td th:text="${e.book_count}"></td>
+                    <td th:text="${e.available}"></td>
                 	
                      <td> <a class="btn btn-primary btn-sm" th:href="@{/User/details(name=${e.book_name})}">Details</a> </td>
                      

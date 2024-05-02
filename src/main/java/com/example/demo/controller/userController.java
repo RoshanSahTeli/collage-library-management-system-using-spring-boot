@@ -60,7 +60,7 @@ public class userController {
 			model.addAttribute("all", list.size());
 			session.setAttribute("email", s.getEmail());
 			model.addAttribute("cate", service.findlastadded());
-			
+			model.addAttribute("pic",service.findByEmail(principal.getName()));
 			return "userHome";
 		}
 		else {
@@ -78,7 +78,6 @@ public class userController {
 			model.addAttribute("bcount", (int)session.getAttribute("bcount"));
 			model.addAttribute("icount", (int)session.getAttribute("icount"));
 		List<BookCountDTO>bcd=service.countBynameandStatus(categories.getName());
-		
 		model.addAttribute("groupby", bcd);
 		 return "category_user";
 	 }

@@ -11,5 +11,7 @@ public interface BookingRepo extends JpaRepository<Booking, Integer> {
 //	@query("select b from booking b where b.username= :username")
 	public List<Booking> findByUsername(String username);
 	public Booking findByBid(String bid);
+	
+	
 
 }
