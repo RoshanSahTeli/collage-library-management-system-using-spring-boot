@@ -66,6 +66,7 @@ private homeService hservice;
 		model.addAttribute("countBooking", service.countBooking());
 		model.addAttribute("list", session.getAttribute("request"));
 		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("pic", session.getAttribute("pic"));
 		response.sendRedirect("/Admin/findAll");
 	}
 	
@@ -93,6 +94,7 @@ private homeService hservice;
 		 session.setAttribute("username", ss.getUsername());
 		 session.setAttribute("email", ss.getEmail());
 		 session.setAttribute("sid", ss.getSid());
+		 session.setAttribute("img", ss.getImg());
 		 List<Booking> blist=service.bookings();
 		 model.addAttribute("blist", blist);
 		 model.addAttribute("stu", service.findbyRole("USER","Verified"));
@@ -396,9 +398,10 @@ private homeService hservice;
 	
 	 @PostMapping("/stuSave")
 	 public String stuSave(@Valid @ModelAttribute(value="student") student stu,@RequestParam("image")MultipartFile file, BindingResult result
-			 ,HttpSession session) throws IllegalStateException, IOException {
+			 ,HttpSession session, Model model) throws IllegalStateException, IOException {
 			String role=(String) session.getAttribute("role");
 			service.stuSave(stu,role,file);
+			model.addAttribute("pic", session.getAttribute("pic"));
 		 return "add_student_form";
 		 
 	 }

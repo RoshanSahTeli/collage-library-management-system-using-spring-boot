@@ -245,7 +245,7 @@ public class appService {
 		return srepo.findByRoleAndStatus(role, status);
 	}
 	public void stuSave(student stu,String role,MultipartFile file) throws IllegalStateException, IOException {
-		String FolderPath="D:\\myspring\\Library\\src\\main\\resources\\static\\images\\";
+		String FolderPath="C:\\Users\\rosha\\OneDrive\\Desktop\\New folder\\Library\\src\\main\\resources\\static\\images\\";
 		String path=FolderPath+file.getOriginalFilename();
 		String sc="images\\";
 		int i=path.indexOf(sc);

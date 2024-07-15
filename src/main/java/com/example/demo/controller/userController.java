@@ -61,6 +61,7 @@ public class userController {
 			session.setAttribute("email", s.getEmail());
 			model.addAttribute("cate", service.findlastadded());
 			model.addAttribute("pic",service.findByEmail(principal.getName()));
+			session.setAttribute("pic", service.findByEmail(principal.getName()));
 			return "userHome";
 		}
 		else {
@@ -77,6 +78,7 @@ public class userController {
 			model.addAttribute("email",session.getAttribute("email") );
 			model.addAttribute("bcount", (int)session.getAttribute("bcount"));
 			model.addAttribute("icount", (int)session.getAttribute("icount"));
+			model.addAttribute("pic", session.getAttribute("pic"));
 		List<BookCountDTO>bcd=service.countBynameandStatus(categories.getName());
 		model.addAttribute("groupby", bcd);
 		 return "category_user";
@@ -89,6 +91,7 @@ public class userController {
 			model.addAttribute("bcount",(int) session.getAttribute("bcount"));
 			model.addAttribute("icount",(int) session.getAttribute("icount"));
 		 List<Books>list=service.findByNameAndStatus(bname, "Available");
+		 model.addAttribute("pic", session.getAttribute("pic"));
 		 
 		 model.addAttribute("blist", list);
 		 return "book_details_user";
@@ -144,7 +147,7 @@ public class userController {
 		Books b=aservice.find(bid);
 		service.booked(bid, username,b.getBname(), LocalDate.now(),s.getSid());
 		aservice.setStatus(bid, "Booked");
-		
+		model.addAttribute("pic", session.getAttribute("pic"));
 		response.sendRedirect("/User/MyBookings");
 	}
 	
@@ -157,6 +160,7 @@ public class userController {
 		model.addAttribute("icount", (int)session.getAttribute("icount"));
 		model.addAttribute("bookings", b);
 		model.addAttribute("bcount", b.size());
+		model.addAttribute("pic", session.getAttribute("pic"));
 		return "myBooking";
 	}
 	
@@ -171,6 +175,7 @@ public class userController {
 		model.addAttribute("email",session.getAttribute("email") );
 		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
 		model.addAttribute("icount",(int) session.getAttribute("icount"));
+		model.addAttribute("pic", session.getAttribute("pic"));
 		response.sendRedirect("/User/MyBookings");
 		
 	}
@@ -183,6 +188,7 @@ public class userController {
 		model.addAttribute("email",session.getAttribute("email") );
 		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
 		model.addAttribute("icount", (int)session.getAttribute("icount"));
+		model.addAttribute("pic", session.getAttribute("pic"));
 		return "allAvailable";
 	}
 	@GetMapping("/issued")
@@ -194,6 +200,7 @@ public class userController {
 		model.addAttribute("bcount", (int)session.getAttribute("bcount"));
 		model.addAttribute("icount", ilist.size());
 		model.addAttribute("issued", ilist);
+		model.addAttribute("pic", session.getAttribute("pic"));
 		 return "issued";
 	 }
 	@GetMapping("/search")
@@ -208,6 +215,7 @@ public class userController {
 		 model.addAttribute("blist", blist);
 		 model.addAttribute("bcount",(int) session.getAttribute("bcount"));
 		model.addAttribute("icount", (int)session.getAttribute("icount"));
+		model.addAttribute("pic", session.getAttribute("pic"));
 		return "searchByUser";
 	}
 
