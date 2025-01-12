@@ -102,6 +102,7 @@ public class appService {
 		s.setSid(ss.getSid());
 		s.setStatus(ss.getStatus());
 		s.setUsername(ss.getUsername());
+		s.setAddress(ss.getAddress());
 		s.setBookList(bList);
 		srepo.save(s);
 

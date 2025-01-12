@@ -7,14 +7,14 @@
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Form Elements</h1>
-      <nav>
+      <h1>Library Management System</h1>
+    <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Forms</li>
+          <li class="breadcrumb-item"><a href="index.html">Add Student Form</a></li>
+          <!--<li class="breadcrumb-item">Forms</li>
           <li class="breadcrumb-item active">Elements</li>
         </ol>
-      </nav>
+      </nav>-->
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -26,30 +26,34 @@
               <h5 class="card-title">Add Student</h5>
 
               <!-- General Form Elements -->
-              <form th:action="@{/Admin/stuSave}" method="post"	enctype="multipart/form-data">
+              <form th:action="@{/Admin/stuSave}" method="post"	enctype="multipart/form-data" th:object="${student}">
 				<div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Student ID</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="sid">
+					<!--<div th:if="${#fields.hasErrors('sid')}" th:errors="*{sid}" style="color: red;"></div>-->
                   </div>
                 </div>
 				
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Student Name</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="username">
+                    <input type="text" class="form-control" name="username" th:field="${student.username}">
+					<div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style=" color: red;"></div>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label for="inputEmail" class="col-sm-2 col-form-label">Address</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="address">
+					<div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" style="color:red"></div>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label for="inputPassword" class="col-sm-2 col-form-label">Email</label>
                   <div class="col-sm-10">
                     <input type="email" class="form-control" name="email">
+					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;" > </div>
                   </div>
                   </div>
              
@@ -57,6 +61,7 @@
                   <label for="inputNumber" class="col-sm-2 col-form-label">Password</label>
                   <div class="col-sm-10">
                     <input type="password" class="form-control" name="password">
+					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;" ></div>
                   </div>
                 </div>
                
@@ -64,6 +69,7 @@
                   <label for="inputNumber" class="col-sm-2 col-form-label">Phone Number</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="phone">
+					<div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: red;" ></div>
                   </div>
                 </div>
 				<div class="row mb-3">

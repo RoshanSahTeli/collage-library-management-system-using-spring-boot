@@ -21,7 +21,7 @@ public class homeService {
 	public void save_signup(student stu,MultipartFile file) throws IllegalStateException, IOException {
 		
 		
-		String folderPath="C:\\Users\\rajes\\OneDrive\\Desktop\\New folder\\Library\\src\\main\\resources\\static\\images\\";
+		String folderPath="C:\\Users\\rosha\\OneDrive\\Desktop\\New folder\\Library\\src\\main\\resources\\static\\images\\";
 		String path=folderPath+file.getOriginalFilename();
 		String sc="images\\";
 		int i=path.indexOf(sc);

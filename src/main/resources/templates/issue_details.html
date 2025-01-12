@@ -41,8 +41,8 @@
                     <td th:text="${e.bname}"></td>
                     <td th:text="${e.sid}"></td>
                     <td th:text="${e.sname}"></td>
-                    <td th:text="${e.issue_date}"></td>
-                    <td th:text="${e.expiry_date}"></td>
+					<td th:text="${#temporals.format(e.issue_date, 'yyyy-MM-dd')}"></td>
+					<td th:text="${#temporals.format(e.expiry_date, 'yyyy-MM-dd')}"></td>
                      	<td> <a class="btn btn-danger btn-sm"data-bs-target="#verticalycentered" th:href="@{/Admin/delete(id=${e.bid})}">delete</a> </td>
                   </tr>
                  
