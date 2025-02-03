@@ -10,14 +10,18 @@ import javax.sound.midi.Soundbank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.Rating;
 import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 import com.example.demo.service.appService;
@@ -25,6 +29,7 @@ import com.example.demo.service.userService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/User")
@@ -56,6 +61,7 @@ public class userController {
 			model.addAttribute("categories", category_list);
 			model.addAttribute("username",s.getUsername());
 			model.addAttribute("email", s.getEmail());
+			model.addAttribute("role", s.getRole());
 			List<Books>list=service.findAllUser("Available");
 			model.addAttribute("all", list.size());
 			session.setAttribute("email", s.getEmail());
@@ -79,9 +85,10 @@ public class userController {
 			model.addAttribute("bcount", (int)session.getAttribute("bcount"));
 			model.addAttribute("icount", (int)session.getAttribute("icount"));
 			model.addAttribute("pic", session.getAttribute("pic"));
-		List<BookCountDTO>bcd=service.countBynameandStatus(categories.getName());
-		model.addAttribute("groupby", bcd);
-		 return "category_user";
+			model.addAttribute("category_name", categories.getName());
+			List<BookCountDTO>bcd=service.countBynameandStatus(categories.getName());
+			model.addAttribute("groupby", bcd);
+			return "category_user";
 	 }
 	@GetMapping("/details")
 	 public String book_details(@RequestParam("name")String bname,Model model,HttpSession session) {
@@ -217,6 +224,26 @@ public class userController {
 		model.addAttribute("icount", (int)session.getAttribute("icount"));
 		model.addAttribute("pic", session.getAttribute("pic"));
 		return "searchByUser";
+	}
+	
+	@GetMapping("/giveRating/{id}")
+	public String giveRating(@PathVariable("id")String bid,Model model,HttpSession session) {
+		
+		model.addAttribute("book", service.findBookById(bid));
+		model.addAttribute("pic", session.getAttribute("pic"));
+		model.addAttribute("rating", new Rating());
+		return "rating_form";
+	}
+	
+	@PostMapping("/rating")
+	public String rating(@Valid @ModelAttribute(value="rating") Rating rating,Model model,@RequestParam("bid")String bid,Principal principal,
+			HttpSession session,BindingResult result) {
+		
+		service.save_rating(bid,principal.getName(), rating);
+		model.addAttribute("book", service.findBookById(bid));
+		model.addAttribute("pic", session.getAttribute("pic"));
+		
+		return "rating_form";
 	}
 
 }

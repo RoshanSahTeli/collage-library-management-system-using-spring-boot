@@ -10,10 +10,12 @@ import com.example.demo.Repository.BookingRepo;
 import com.example.demo.Repository.CategoryRepo;
 import com.example.demo.Repository.bookRepository;
 import com.example.demo.Repository.issueRepo;
+import com.example.demo.Repository.ratingRepo;
 import com.example.demo.Repository.studentRepository;
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.Rating;
 import com.example.demo.entity.category;
 import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
@@ -32,6 +34,9 @@ public class userService {
 	private issueRepo irepo;
 	@Autowired
 	private CategoryRepo crepo;
+	
+	@Autowired
+	private ratingRepo rrepo;
 	
 	public student findByEmail(String email) {
 		student s=srepo.findByEmail(email);
@@ -84,5 +89,17 @@ public class userService {
 		return crepo.findFirst3ByOrderByNameDesc();
 	}
 	
+	public Books findBookById(String bid) {
+		return brepo.findById(bid).get();
+	}
+	
+	public void save_rating(String bid,String email,Rating rating) {
+		Rating r= new Rating();
+		r.setBook(findBookById(bid));
+		r.setReview(rating.getReview());
+		r.setRatingValue(rating.getRatingValue());
+		r.setStudent(findByEmail(email));
+		rrepo.save(r);
+	}
 
 }

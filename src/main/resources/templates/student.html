@@ -7,7 +7,7 @@
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1 th:text="${user_role}"></h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -23,6 +23,7 @@
               <table class="table datatable">
                 <thead>
                   <tr>
+					<th>Image</th>
                     <th>
                     	Student ID
                     </th>
@@ -39,6 +40,7 @@
                 <tbody>
                  
                   <tr  th:each="s:${slist}">
+					<td> <img th:src="@{'/images/'+${s.img}}" style="height: 35px; width: 45px;"> </td>
                     <td th:text="${s.sid}"></td>
                     <td th:text="${s.username}"></td>
                     <td th:text="${s.address}"></td>

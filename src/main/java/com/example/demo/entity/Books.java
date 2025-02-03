@@ -1,11 +1,16 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,6 +35,32 @@ public class Books {
 	@ManyToOne
 	@JoinColumn(name = "sid")
 	private student student;
+	
+	@OneToOne(mappedBy = "books", cascade = CascadeType.ALL,orphanRemoval = true)
+	private issue issue;
+	
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+	private List<Rating> ratingList;
+	
+	
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	
+
+	public issue getIssue() {
+		return issue;
+	}
+
+	public void setIssue(issue issue) {
+		this.issue = issue;
+	}
 
 	public String getBid() {
 		return bid;
@@ -95,17 +126,22 @@ public class Books {
 		this.student = student;
 	}
 
-	public Books(String bid, String bname, String author, String publication, LocalDateTime add_date, String Category,
-			String status, com.example.demo.entity.student student) {
+	
+
+	
+
+	public Books(String bid, String bname, String author, String publication, LocalDateTime date, String category,
+			String status, com.example.demo.entity.student student, com.example.demo.entity.issue issue) {
 		super();
 		this.bid = bid;
 		this.bname = bname;
 		Author = author;
 		this.publication = publication;
-		this.date = add_date;
-		this.category = Category;
+		this.date = date;
+		this.category = category;
 		this.status = status;
 		this.student = student;
+		this.issue = issue;
 	}
 
 	public Books() {

@@ -53,6 +53,21 @@ public class student {
 	public List<Books>bookList=new ArrayList<>();
 	public int getSid() {
 		return sid;
+		
+	}
+	@OneToMany(mappedBy = "student",cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<issue> issues=new ArrayList<>();
+	
+	@OneToMany(mappedBy = "student",cascade = CascadeType.ALL)	
+	private List<Rating> ratingList;
+	
+	
+	
+	public List<issue> getIssues() {
+		return issues;
+	}
+	public void setIssues(List<issue> issues) {
+		this.issues = issues;
 	}
 	public void setSid(int sid) {
 		this.sid = sid;
@@ -105,8 +120,15 @@ public class student {
 	public void setBookList(List<Books> bookList) {
 		this.bookList = bookList;
 	}
-	public student(int sid, String username, String email, String password, String phone, String address, String role,
-			String status,String img, List<Books> bookList) {
+	
+	
+	
+	public student(int sid, @NotBlank(message = "Username should not be blank!") String username,
+			@NotBlank @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$", message = "Invalid email format") String email,
+			@NotBlank @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must be at least 8 characters long, contain at least one digit, one lowercase letter, one uppercase letter, one special character, and no whitespace") String password,
+			@NotBlank @Size(max = 10, min = 10, message = "Length should be of exactly 10 digits") String phone,
+			@NotBlank String address, String role, String status, String img, List<Books> bookList,
+			List<issue> issues) {
 		super();
 		this.sid = sid;
 		this.username = username;
@@ -116,8 +138,9 @@ public class student {
 		this.address = address;
 		this.role = role;
 		this.status = status;
+		this.img = img;
 		this.bookList = bookList;
-		this.img=img;
+		this.issues = issues;
 	}
 	public student() {
 		super();

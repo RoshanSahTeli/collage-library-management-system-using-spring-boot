@@ -10,17 +10,20 @@ public class BookCountDTO {
 	
 	private long booked;
 	
-	private String status;
+	private double rating;
+	
+	
 	
 
-	public String getStatus() {
-		return status;
+	public double getRating() {
+		return rating;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 
+	
 	public String getBook_name() {
 		return book_name;
 	}
@@ -53,19 +56,22 @@ public class BookCountDTO {
 		this.booked = booked;
 	}
 
-	public BookCountDTO(String book_name, long available, long issued, long booked) {
+	
+
+	public BookCountDTO(String book_name, long available, long issued, long booked, double rating) {
 		super();
 		this.book_name = book_name;
 		this.available = available;
 		this.issued = issued;
 		this.booked = booked;
 		
+		this.rating = rating;
 	}
 	
-	public BookCountDTO(String book_name,long count) {
-		super();
+	public BookCountDTO(String book_name,long available,double rating) {
 		this.book_name=book_name;
-		this.available=count;
+		this.available=available;
+		this.rating=rating;
 	}
 
 	public BookCountDTO() {

@@ -1,0 +1,102 @@
+<html th:replace="basee::layout(~{::section})">
+
+<head>
+
+	</script>
+</head>
+
+<body>
+	<section>
+		<main id="main" class="main">
+
+			<div class="pagetitle">
+				<h1>Exipred Rentals</h1>
+			</div><!-- End Page Title -->
+
+			<section class="section">
+				<div class="row">
+					<div class="col-lg-12">
+
+						<div class="card">
+							<div class="card-body">
+
+
+
+								<!-- Table with stripped rows -->
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>Issue ID</th>
+											<th>
+												Book ID
+											</th>
+
+											<th>Student ID</th>
+											<th>Student Name</th>
+											<th>Issued Date</th>
+											<th>Expiry Date</th>
+											<th>Over due</th>
+											<th>Mail</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="e:${expired}">
+											<td th:text="${e.issueID}"></td>
+											<td th:text="${e.books.bid}"></td>
+											<td th:text="${e.student.sid}"></td>
+											<td th:text="${e.student.username}"></td>
+											<td th:text="${e.issue_date}"></td>
+											<td th:text="${e.expiry_date}"></td>
+											<td
+												th:text="${e.expiry_date != null ? T(java.time.temporal.ChronoUnit).DAYS.between(#temporals.createToday(), e.expiry_date) : ''}">
+											</td>
+											<td>
+
+												<a class="btn btn-primary btn-sm"
+													th:href="@{'/Admin/expire_mail/' + ${e.issueID}}">
+													Send Email
+												</a>
+
+
+
+
+
+
+											</td>
+											<!--<td><a class="btn btn-primary btn-sm"  th:href="@{${e.status=='Available'}?'/Admin/issue_search':'/Admin/issue_details'(id=${e.bid})}"><span th:text="${e.status=='Available'?'issue':'Details'}"></span></a> </td>-->
+
+										</tr>
+
+									</tbody>
+								</table>
+								<!-- End Table with stripped rows -->
+								<!-- Modal -->
+
+							</div>
+
+
+						</div>
+					</div>
+
+				</div>
+				</div>
+				<th th:insert="modal::modal1"></th>
+			</section>
+
+		</main><!-- End #main -->
+
+
+		<!-- Bootstrap JS and jQuery -->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	</section>
+</body>
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+</html>

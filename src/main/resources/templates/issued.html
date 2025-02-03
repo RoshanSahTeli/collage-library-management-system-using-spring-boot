@@ -1,11 +1,18 @@
 <html th:replace="userBase::layout(~{::section})">
-	<head></head>
+	<head>
+		
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+		<!-- jQuery -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<!-- DataTables JS -->
+		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	</head>
 	<body>
 		<section>
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Books</h1>
+      <h1>Issued To Me</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -28,17 +35,18 @@
                     
                     <th>Issued Date</th>
                     <th>Expiring On</th>
+					<th>Rating</th>
                     
                   </tr>
                 </thead>
                 <tbody>
                  
                   <tr  th:each="e:${issued}">
-                    <td th:text="${e.bid}"></td>
-                    <td th:text="${e.bname}"></td>
+                    <td th:text="${e.books.bid}"></td>
+                    <td th:text="${e.books.bname}"></td>
                     <td th:text="${e.issue_date}"></td>
                     <td th:text="${e.expiry_date}"> </td>
-                  
+                  	<td> <a th:href="@{'/User/giveRating/'+${e.books.bid}}" class="btn btn-danger">Rate</a></td>
                   </tr>
                  
                 </tbody>

@@ -7,7 +7,7 @@
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Books</h1>
+      <h1>Category:<span th:text="${category_name}"></span></h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -28,7 +28,8 @@
                     <th>Available</th>
                     <th>Issued</th>
                     <th>Booked</th>
-                    <th>Details</th>
+                    <th>Rating</th>
+					<th>Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,7 @@
                     <td th:text="${e.available}"></td>
                     <td th:text="${e.issued}"></td>
                     <td th:text="${e.booked}"></td>
+					<td th:text="${e.rating}"></td>
                      <td> <a class="btn btn-primary btn-sm" th:href="@{/Admin/details(name=${e.book_name})}">Details</a> </td>
                      
                   </tr>

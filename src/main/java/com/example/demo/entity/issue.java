@@ -1,106 +1,96 @@
 package com.example.demo.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "issue")
 public class issue {
-	
-	
+
 	@Id
-	private String bid;
-	 private String bname;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long issueID;
+
+	@ManyToOne
+	@JoinColumn(name = "sid", nullable = false)
+	private student student;
 	
+	@ManyToOne
+	@JoinColumn(name = "bid",nullable = false)
+	private Books books;
 	
-	public String getBname() {
-		return bname;
+	private LocalDate issue_date;
+	
+	private LocalDate expiry_date;
+	
+	@ManyToOne
+	@JoinColumn(name = "issuedBy",nullable = false)
+	private student issuedBy;
+
+	public long getIssueID() {
+		return issueID;
 	}
 
-	public void setBname(String bname) {
-		this.bname = bname;
+	public void setIssueID(long issueID) {
+		this.issueID = issueID;
 	}
 
-	private int sid;
-	
-	private String sname;
-	
-	private LocalDateTime expiry_date;
-	
-	
-	
-	
-	
-	public LocalDateTime getExpiry_date() {
-		return expiry_date;
+	public student getStudent() {
+		return student;
 	}
 
-	public void setExpiry_date(LocalDateTime expiry_date) {
-		this.expiry_date = expiry_date;
+	public void setStudent(student student) {
+		this.student = student;
 	}
 
-	private LocalDateTime issue_date;
-
-	public String getBid() {
-		return bid;
+	public Books getBooks() {
+		return books;
 	}
 
-	public void setBid(String bid) {
-		this.bid = bid;
+	public void setBooks(Books books) {
+		this.books = books;
 	}
 
-
-
-	
-
-	public int getSid() {
-		return sid;
-	}
-
-	public void setSid(int sid) {
-		this.sid = sid;
-	}
-
-	public String getSname() {
-		return sname;
-	}
-
-	public void setSname(String sname) {
-		this.sname = sname;
-	}
-
-	
-
-	
-
-	public LocalDateTime getIssue_date() {
+	public LocalDate getIssue_date() {
 		return issue_date;
 	}
 
-	public void setIssue_date(LocalDateTime issue_date) {
+	public void setIssue_date(LocalDate issue_date) {
 		this.issue_date = issue_date;
 	}
 
-	@Override
-	public String toString() {
-		return "issue [bid=" + bid + ", sid=" + sid + ", sname=" + sname 
-				+ ", issue_date=" + issue_date + "]";
+	public LocalDate getExpiry_date() {
+		return expiry_date;
 	}
 
-	public issue(String bid, int sid, String sname, LocalDateTime issue_date,String bname,LocalDateTime expiry_date) {
+	public void setExpiry_date(LocalDate expiry_date) {
+		this.expiry_date = expiry_date;
+	}
+
+	public student getIssuedBy() {
+		return issuedBy;
+	}
+
+	public void setIssuedBy(student issuedBy) {
+		this.issuedBy = issuedBy;
+	}
+
+	public issue(long issueID, com.example.demo.entity.student student, Books books, LocalDate issue_date,
+			LocalDate expiry_date, com.example.demo.entity.student issuedBy) {
 		super();
-		this.bid = bid;
-		this.bname=bname;
-		this.sid = sid;
-		this.sname = sname;
-		this.expiry_date=expiry_date;
+		this.issueID = issueID;
+		this.student = student;
+		this.books = books;
 		this.issue_date = issue_date;
+		this.expiry_date = expiry_date;
+		this.issuedBy = issuedBy;
 	}
 
 	public issue() {
@@ -109,4 +99,6 @@ public class issue {
 	}
 	
 	
+	
+
 }

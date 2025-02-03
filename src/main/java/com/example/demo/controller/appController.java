@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
+import java.awt.print.Book;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,9 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.issue;
 import com.example.demo.entity.student;
 import com.example.demo.service.appService;
 import com.example.demo.service.homeService;
+import com.opencsv.exceptions.CsvException;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -50,6 +50,8 @@ public class appController {
 		model.addAttribute("countBooking", service.countBooking());
 		model.addAttribute("list", session.getAttribute("request"));
 		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 	
 		return "add_book_form";
 	}
@@ -66,6 +68,8 @@ public class appController {
 		model.addAttribute("countBooking", service.countBooking());
 		model.addAttribute("list", session.getAttribute("request"));
 		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		
 		response.sendRedirect("/Admin/findAll");
 	}
@@ -78,6 +82,11 @@ public class appController {
 		model.addAttribute("categories", category_list);
 		model.addAttribute("category_count", category_list.size());
 		session.setAttribute("request", list);
+		int size=service.expired().size();
+		model.addAttribute("expired_count", size);
+		model.addAttribute("issue_count", service.issued_list().size());
+		session.setAttribute("expired_count", size);
+		session.setAttribute("issue_count", service.issued_list().size());
 		model.addAttribute("countBooking", service.countBooking());
 		int count = list.size();
 		model.addAttribute("list", list);
@@ -121,6 +130,8 @@ public class appController {
 		model.addAttribute("all", allBooks);
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		return "allBooks";
 	}
 
@@ -131,42 +142,59 @@ public class appController {
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
 		model.addAttribute("countBooking", service.countBooking());
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 
 		return "issue_form";
 	}
 
+//	@PostMapping("/issue")
+//	public String issue(@RequestParam("bid") String bid, @RequestParam("bname") String bname,
+//			@RequestParam("sid") int sid, @RequestParam("sname") String sname, @RequestParam("days") int days,
+//			Model model, HttpSession session) {
+//
+//		List<Books> l = service.check_book(bid, "Available");
+//		student s = service.check_student(sid, "Verified");
+//		model.addAttribute("list", session.getAttribute("request"));
+//		model.addAttribute("count", session.getAttribute("count"));
+//		model.addAttribute("categories", session.getAttribute("categories"));
+//		model.addAttribute("user", session.getAttribute("user"));
+//		model.addAttribute("countBooking", service.countBooking());
+//		if (l.isEmpty()) {
+//			model.addAttribute("type", "Book");
+//			model.addAttribute("id", bid);
+//			model.addAttribute("pic", session.getAttribute("pic"));
+//			return "not_available";
+//		}
+//
+//		else if (s == null) {
+//			model.addAttribute("type", "Student");
+//			model.addAttribute("id", sid);
+//			model.addAttribute("pic", session.getAttribute("pic"));
+//			return "not_available";
+//		} else {
+//			service.issue(bid, sid, sname, bname, days);
+//			service.setStatus(bid, "issued");
+//			return "issue_success";
+//
+//		}
+//
+//	}
+	
 	@PostMapping("/issue")
-	public String issue(@RequestParam("bid") String bid, @RequestParam("bname") String bname,
-			@RequestParam("sid") int sid, @RequestParam("sname") String sname, @RequestParam("days") int days,
-			Model model, HttpSession session) {
-
-		List<Books> l = service.check_book(bid, "Available");
-		student s = service.check_student(sid, "Verified");
+	public String issue(@RequestParam("bid") String bid,@RequestParam("sid") int sid, @RequestParam("days")int days,Principal princial ,Model model,HttpSession session) {
+		service.issue(bid, sid, days,princial.getName());
+		model.addAttribute("user", session.getAttribute("user"));
 		model.addAttribute("list", session.getAttribute("request"));
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
-		model.addAttribute("user", session.getAttribute("user"));
 		model.addAttribute("countBooking", service.countBooking());
-		if (l.isEmpty()) {
-			model.addAttribute("type", "Book");
-			model.addAttribute("id", bid);
-			model.addAttribute("pic", session.getAttribute("pic"));
-			return "not_available";
-		}
-
-		else if (s == null) {
-			model.addAttribute("type", "Student");
-			model.addAttribute("id", sid);
-			model.addAttribute("pic", session.getAttribute("pic"));
-			return "not_available";
-		} else {
-			service.issue(bid, sid, sname, bname, days);
-			service.setStatus(bid, "issued");
-			return "issue_success";
-
-		}
-
+		service.setStatus(bid, "issued");
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		return "issue_success";
 	}
+	
 
 //	@GetMapping("/add_student_form")
 //	public String add_form(Model model,HttpSession session) {
@@ -225,6 +253,8 @@ public class appController {
 		List<Books> blist = service.findByIdOrName(id, name);
 
 		model.addAttribute("blist", blist);
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 
 		return "search_issued";
 
@@ -253,7 +283,8 @@ public class appController {
 
 		Books b = service.update_value(id);
 		model.addAttribute("values", b);
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		return "updateForm";
 	}
 
@@ -269,6 +300,8 @@ public class appController {
 			model.addAttribute("count", session.getAttribute("count"));
 			model.addAttribute("categories", session.getAttribute("categories"));
 			model.addAttribute("user", session.getAttribute("user"));
+			model.addAttribute("expired_count", session.getAttribute("expired_count"));
+			model.addAttribute("issue_count", session.getAttribute("issue_count"));
 			
 
 			response.sendRedirect("/Admin/findAll");
@@ -280,27 +313,29 @@ public class appController {
 	}
 
 	@GetMapping("/delete")
-	public void delete(@RequestParam("id") String bid, HttpServletResponse response, Model model, HttpSession session)
+	public void delete(@RequestParam("id") String id, HttpServletResponse response, Model model, HttpSession session)
 			throws IOException {
 
-		Books b = service.find(bid);
+		Books b= service.findBookById(id);
 		String status = b.getStatus();
+		issue i=service.findIssueByBid(id);
 		String s = "issued";
 		if (status.equals(s)) {
-			service.idelete(bid);
-			service.setStatus(bid, "Available");
+			service.setStatus(b.getBid(), "Available");
+			service.idelete(i.getIssueID());
 		} else if (status.equals("Booked")) {
-			Booking bb = service.findByBid(bid);
+			Booking bb = service.findByBid(b.getBid());
 			service.cancel_booking(bb.getBooking_id());
-			service.bdelete(bid);
+			//service.bdelete(bid);
 		} else {
-			service.bdelete(bid);
+			service.bdelete(id);
 		}
 		model.addAttribute("list", session.getAttribute("request"));
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		response.sendRedirect("/Admin/findAll");
 	}
 
@@ -312,7 +347,8 @@ public class appController {
 		model.addAttribute("count", count);
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 
 		return "request";
@@ -325,6 +361,9 @@ public class appController {
 		student s = service.findStudent(sid);
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("countBooking", service.countBooking());
 	
 		service.mail(s.getEmail(),
 				"Dear" + s.getUsername() + ", You are now registered user of Library Management System", "Verified");
@@ -334,11 +373,16 @@ public class appController {
 	}
 
 	@GetMapping("/reject")
-	public void reject(@RequestParam("id") int sid, HttpServletResponse response) throws IOException {
+	public void reject(@RequestParam("id") int sid, HttpServletResponse response,Model model,HttpSession session) throws IOException {
 		student s = service.findStudent(sid);
 		service.mail(s.getEmail(), "Dear, " + s.getUsername() + "Registration for Library Management System failed",
 				"Rejected");
 		service.reject(sid);
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("countBooking", service.countBooking());
 		response.sendRedirect("/Admin/show_requests");
 	}
 
@@ -356,9 +400,10 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
-
+		model.addAttribute("user_role", "Users");
 		model.addAttribute("slist", slist);
 		return "student";
 	}
@@ -371,7 +416,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 
 		return "add_student_form";
@@ -382,7 +428,12 @@ public class appController {
 			@RequestParam("image") MultipartFile file, HttpSession session, Model model)
 			throws IllegalStateException, IOException {
 		String role = (String) session.getAttribute("role");
-		model.addAttribute("pic", session.getAttribute("pic"));
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
 		if (result.hasErrors()) {
 			return "add_student_form";
 		} else {
@@ -398,9 +449,10 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
-
+	
 		session.setAttribute("role", "ADMIN");
 		return "add_admin_form";
 	}
@@ -411,7 +463,9 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("user_role", "Admins");
 		List<student> slist = service.find_student("ADMIN", "Verified");
 		model.addAttribute("slist", slist);
 		model.addAttribute("countBooking", service.countBooking());
@@ -424,7 +478,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 
 		student s = service.findStudent(id);
@@ -438,8 +493,19 @@ public class appController {
 			@RequestParam("phone") String phone, HttpServletResponse response, HttpSession session, Model model)
 			throws IOException {
 		service.admin_update_save(sid, username, address, email, phone);
-		model.addAttribute("pic", session.getAttribute("pic"));
-		response.sendRedirect("/Admin/findAdmins");
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		String role=service.findStudent(sid).getRole();
+		if(role.equals("ADMIN")) {
+			response.sendRedirect("/Admin/findAdmins");
+		}
+		else {
+			response.sendRedirect("/Admin/students");
+		}
 
 	}
 
@@ -447,8 +513,13 @@ public class appController {
 	public void delete_student(@RequestParam("id") int sid, HttpServletResponse response, Model model,
 			HttpSession session) throws IOException {
 		service.delete_student(sid);
-		model.addAttribute("pic", session.getAttribute("pic"));
-		response.sendRedirect("/Admin/home");
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		response.sendRedirect("/Admin/students");
 
 	}
 
@@ -458,7 +529,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 		List<Books> list = service.findByName(bname);
 		// com.example.demo.entity.issue i=service.issue_details(bid);
@@ -476,7 +548,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 	
 		Books b = service.issue_search(bid);
@@ -491,8 +564,10 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-		
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
+		model.addAttribute("category_name", categories.getName());
 		List<BookCountDTO> bcd = service.list(categories.getName());
 		model.addAttribute("groupby", bcd);
 		return "book_category";
@@ -530,12 +605,11 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
 		model.addAttribute("countBooking", service.countBooking());
 		com.example.demo.entity.issue i = service.issue_details(bid);
-		session.setAttribute("mo", i);
 		model.addAttribute("issue_details", i);
-		model.addAttribute("h", "hello");
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		return "issue_details";
 	}
 
@@ -545,7 +619,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 		List<com.example.demo.entity.category> list = service.categoryAll();
 		model.addAttribute("clist", list);
@@ -558,8 +633,12 @@ public class appController {
 		service.add_category(cname);
 		List<com.example.demo.entity.category> category_list = service.get_categories();
 		session.setAttribute("categories", category_list);
-		model.addAttribute("pic", session.getAttribute("pic"));
-		// model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		response.sendRedirect("/Admin/category");
 	}
 
@@ -569,7 +648,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 	
 		com.example.demo.entity.category c = service.update_form(cid);
@@ -586,7 +666,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 		List<com.example.demo.entity.category> category_list = service.get_categories();
 	
@@ -602,7 +683,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 
 		List<com.example.demo.entity.category> category_list = service.get_categories();
@@ -617,7 +699,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 	
 		model.addAttribute("countBooking", service.countBooking());
 		List<Booking> blist = service.bookings();
@@ -632,7 +715,8 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 		Booking b = service.findBooking(booking_id);
 		service.cancel_booking(booking_id);
@@ -642,19 +726,20 @@ public class appController {
 	}
 
 	@GetMapping("/issueBooking")
-	public void issue_Booking(@RequestParam("id") int Booking_id, Model model, HttpSession session,
+	public void issue_Booking(@RequestParam("id") int Booking_id, Model model, HttpSession session,Principal principle,
 			HttpServletResponse response) throws IOException {
 		model.addAttribute("list", session.getAttribute("request"));
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 		Booking b = service.findBooking(Booking_id);
 
 		service.setStatus(b.getBid(), "issued");
 		service.cancel_booking(Booking_id);
-		service.issue(b.getBid(), b.getUser_id(), b.getUsername(), b.getBname(), 7);
+		service.issue(b.getBid(), b.getUser_id(),7,principle.getName());
 
 		response.sendRedirect("/Admin/bookings");
 	}
@@ -667,18 +752,23 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-	
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		model.addAttribute("countBooking", service.countBooking());
 		return "Bookings";
 	}
 
 	@GetMapping("/book/{id}")
 	public String showBookDetails(@PathVariable("id") String id, Model model, HttpSession session) {
-		com.example.demo.entity.issue book = service.getIssuedBookById(id); // Assuming you have a service to retrieve
+		//com.example.demo.entity.issue book = service.getIssuedBookById(id); // Assuming you have a service to retrieve
 																			// book details
-		model.addAttribute("book", book);
+		//model.addAttribute("book", book);
 		model.addAttribute("h", "hello");
-		model.addAttribute("pic", session.getAttribute("pic"));
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		return "book_details"; // Thymeleaf template for book details
 	}
 
@@ -692,8 +782,69 @@ public class appController {
 		model.addAttribute("count", session.getAttribute("count"));
 		model.addAttribute("categories", session.getAttribute("categories"));
 		model.addAttribute("user", session.getAttribute("user"));
-
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
 		return "allBooks";
+	}
+	
+	@GetMapping("/expired")
+	public String expired(Model model,HttpSession session) {
+		List<issue> list= service.expired();
+		model.addAttribute("expired", list);
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("countBooking", service.countBooking());
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		return "expired";
+	}
+	
+	@GetMapping("/expire_mail/{id}")
+	public void expired_mail(Model model,HttpSession session, @PathVariable("id") long id,HttpServletResponse response ) throws IOException {
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("countBooking", service.countBooking());
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		service.mail(service.findIssueById(id).getStudent().getEmail(), "Dear, "+service.findIssueById(id).getStudent().getUsername()+"Expiry date of Rented Book has reached on"
+				+ service.findIssueById(id).getExpiry_date(),"Expired!");
+		response.sendRedirect("/Admin/expired");
+	}
+	
+	@GetMapping("/issued_list")
+	public String issued_list(Model model,HttpSession session) {
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("countBooking", service.countBooking());
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("issued_list", service.issued_list());
+		return "issued_list";
+	}
+	
+	@GetMapping("/search_issuedList")
+	public String search_issuedList(@RequestParam("search")String search ,Model model,HttpSession session) {
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("countBooking", service.countBooking());
+		model.addAttribute("list", session.getAttribute("request"));
+		model.addAttribute("count", session.getAttribute("count"));
+		model.addAttribute("categories", session.getAttribute("categories"));
+		model.addAttribute("expired_count", session.getAttribute("expired_count"));
+		model.addAttribute("issue_count", session.getAttribute("issue_count"));
+		model.addAttribute("issued_list", service.searchIssueList(search));
+		return "issued_list";
+	}
+	
+	@PostMapping("/csv_saveBooks")
+	public void csvSave(@RequestParam("file") MultipartFile file,HttpServletResponse response) throws IOException, CsvException {
+		service.save_csv(file);
+		response.sendRedirect("/Admin/findAll");
 	}
 
 }

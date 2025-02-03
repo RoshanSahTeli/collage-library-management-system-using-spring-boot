@@ -7,7 +7,7 @@
 			<main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1>Category: <span th:text="${category_name}"></span></h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -26,7 +26,8 @@
                     <th>Book Name</th>
                    
                     <th>Available Count</th>
-                    <th>Details</th>
+                    <th>Rating</th>
+					<th>Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -35,6 +36,7 @@
                    
                     <td th:text="${e.book_name}"></td>
                     <td th:text="${e.available}"></td>
+					<td th:text="${e.rating}"> </td>
                 	
                      <td> <a class="btn btn-primary btn-sm" th:href="@{/User/details(name=${e.book_name})}">Details</a> </td>
                      

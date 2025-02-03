@@ -1,0 +1,88 @@
+<html th:replace="userBase::layout(~{::section})">
+
+<body>
+	<section>
+		<main id="main" class="main">
+
+			<div class="pagetitle">
+				<h1>Library Management System</h1>
+				<nav>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index.html">Give Rating</a></li>
+
+					</ol>
+				</nav>
+			</div><!-- End Page Title -->
+
+			<section class="section">
+				<div class="row">
+					<div class="col-lg-12">
+
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Rating Form</h5>
+
+								<!-- General Form Elements -->
+								<form th:action="@{/User/rating}" method="post" th:object="${rating}">
+
+									<div class="row mb-3">
+										<label for="inputText" class="col-sm-2 col-form-label">Book ID</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" name="bid" th:value="${book.bid}" >
+										</div>
+									</div>
+
+									<!-- <div class="row mb-3">
+		                  <label for="inputText" class="col-sm-2 col-form-label">Book Name</label>
+		                  <div class="col-sm-10">
+		                    <input type="text" class="form-control" name="bname">
+		                  </div>
+		                </div>-->
+									<div class="row mb-3">
+										<label for="inputEmail" class="col-sm-2 col-form-label">Book Name</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" name="sid" th:value="${book.bname}">
+										</div>
+									</div>
+									<div class="row mb-3">
+										<label for="inputPassword" class="col-sm-2 col-form-label">Rating Value</label>
+										<div class="col-sm-10">
+											<input type="number" class="form-control" name="ratingValue"th:field="${rating.ratingValue}">
+										</div>
+										<div th:if="${#fields.hasErrors('ratingValue')}" th:errors="*{ratingValue}">
+											
+										</div>
+									</div>
+
+									<div class="row mb-3">
+										<label for="inputPassword" class="col-sm-2 col-form-label">Review</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" name="review">
+										</div>
+									</div>
+
+
+
+									<div class="row mb-3">
+
+										<div class="col-sm-10">
+											<button type="submit" class="btn btn-primary">Submit</button>
+										</div>
+									</div>
+
+								</form><!-- End General Form Elements -->
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</section>
+
+		</main>
+	</section>
+</body>
+
+</html>

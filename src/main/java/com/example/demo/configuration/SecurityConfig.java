@@ -18,6 +18,8 @@ public class SecurityConfig {
 	@Autowired
 	private CustomAuthSucessHandler handler;
 	
+	
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

@@ -1,0 +1,109 @@
+<html th:replace="basee::layout(~{::section})">
+
+<head></head>
+
+<body>
+	<section>
+		<main id="main" class="main">
+
+			<div class="pagetitle">
+				<h1>Issued Books</h1>
+			</div><!-- End Page Title -->
+
+			<section class="section">
+				<div class="row">
+					<div class="col-lg-12">
+
+						<div class="card">
+							<div class="card-body">
+								<form th:action="@{/Admin/search_issuedList}" method="get">
+
+									<div class="row mb-1 mt-3">
+
+										<div class="col-sm-3">
+											<input type="text" class="form-control" name="search">
+										</div>
+									</div>
+									<div class="row mb-3">
+										<div class="col-sm-10">
+											<button type="submit" class="btn btn-primary">Search</button>
+										</div>
+									</div>
+
+								</form>
+
+
+								<!-- Table with stripped rows -->
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>Issue ID</th>
+											<th>
+												Book ID
+											</th>
+											<th>Student ID</th>
+											<th>Student Name</th>
+											<th>Issued Date</th>
+											<th>Expiry Date</th>
+											<!--<th>Added Date</th>-->
+
+											<th>Delete</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<tr th:each="e:${issued_list}">
+											<td th:text="${e.issueID}"></td>
+											<td th:text="${e.books.bid}"></td>
+											<td th:text="${e.student.sid}"></td>
+											<td th:text="${e.student.username}"></td>
+											<td th:text="${e.issue_date}"></td>
+											<!-- <td th:text="${e.date}"></td>-->
+											<td th:text="${e.expiry_date}"></td>
+											<td>
+												<div >
+													<a class="btn btn-info btn-sm"
+														th:href="@{/Admin/delete(id=${e.issueID})}">Delete</a>
+												</div>
+
+												
+
+											</td>
+											
+										</tr>
+
+									</tbody>
+								</table>
+								<!--<nav aria-label="Page navigation example">
+                <ul class="pagination">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}" > 
+                  <li class="page-item"><a class="page-link" th:href="@{'/Admin/findAll/' + ${i}}">[[${i}]]</a></li>
+                  <!--<li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li></span>
+                </ul>
+              </nav>-->
+								<!--<footer style="font-size: large" class="panel-footer">
+    Total Items [[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
+    &nbsp; &nbsp; - &nbsp;
+    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{'/Admin/findAll/' + ${i}}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+</footer>-->
+							</div>
+							<!-- End Table with stripped rows -->
+
+						</div>
+					</div>
+
+				</div>
+				</div>
+			</section>
+
+		</main><!-- End #main -->
+	</section>
+</body>
+
+</html>

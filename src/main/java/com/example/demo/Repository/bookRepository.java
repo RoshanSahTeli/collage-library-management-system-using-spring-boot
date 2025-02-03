@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.BookCountDTO;
 import com.example.demo.entity.Books;
+import com.example.demo.entity.issue;
 
 public interface bookRepository extends JpaRepository<Books, String> {
 	
@@ -42,22 +43,34 @@ public interface bookRepository extends JpaRepository<Books, String> {
 	List<Books> findByCategory(String category);
 	
 	@Query("SELECT new com.example.demo.entity.BookCountDTO(b.bname, " +
-			"COUNT(b) FILTER (WHERE b.status = 'Available'), " +
+		       "COUNT(b) FILTER (WHERE b.status = 'Available'), " +
 		       "COUNT(b) FILTER (WHERE b.status = 'issued'), " +
-		       "COUNT(b) FILTER (WHERE b.status = 'booked')) " +
-		       "FROM Books b WHERE b.category = :category GROUP BY b.bname")
-
+		       "COUNT(b) FILTER (WHERE b.status = 'booked'), " +
+		       "COALESCE(AVG(r.ratingValue), 0)) " + 
+		       "FROM Books b " +
+		       "LEFT JOIN Rating r ON b.bid = r.book.bid " + 
+		       "WHERE b.category = :category " +
+		       "GROUP BY b.bname")
 	List<BookCountDTO> countBooksByName(@Param("category") String category);
 	
 	public List<Books> findByBname(String name);
 	
-	@Query("SELECT new com.example.demo.entity.BookCountDTO(b.bname, COUNT(b)) " +
-	           "FROM Books b " +
-	           "WHERE b.category = :category AND b.status = 'Available' " +
-	           "GROUP BY b.bname")
+	@Query("SELECT new com.example.demo.entity.BookCountDTO(" +
+		       "b.bname, " + 
+		       "COUNT(b), " + 
+		       "COALESCE(AVG(r.ratingValue), 0)) " + 
+		       "FROM Books b " +
+		       "LEFT JOIN Rating r ON b.bid = r.book.bid " + 
+		       "WHERE b.category = :category " + 
+		       "GROUP BY b.bname")
 	List<BookCountDTO> findAvailableBooksByNameAndCategory(@Param("category") String category);
 	
 	
 	List<Books> findByStatus(String status);
+	
+	@Query("select b from Books b where (b.bid = :input or str(b.issue.issueID) = :input) and b.status = 'issued'")
+	public List<Books> searchByIssueIdOrBookId(@Param("input") String input);
+
+
 	
 }
